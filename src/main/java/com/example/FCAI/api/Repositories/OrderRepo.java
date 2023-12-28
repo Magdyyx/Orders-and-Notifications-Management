@@ -23,7 +23,7 @@ public class OrderRepo implements RepositoryService <Order> {
     }
 
     @Override
-    public Order findById(Long id) {
+    public Order findById(int id) {
         return null;
     }
 

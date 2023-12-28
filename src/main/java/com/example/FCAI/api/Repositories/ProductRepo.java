@@ -7,6 +7,7 @@ import java.util.List;
 
 public class ProductRepo implements RepositoryService <Product> {
 
+
     @Override
     public Product create(Product product) {
         return null;
@@ -23,7 +24,7 @@ public class ProductRepo implements RepositoryService <Product> {
     }
 
     @Override
-    public Product findById(Long id) {
+    public Product findById(int id) {
         return null;
     }
 
