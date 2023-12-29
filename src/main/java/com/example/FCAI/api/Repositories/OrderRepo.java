@@ -42,7 +42,7 @@ public class OrderRepo implements RepositoryService<Order> {
                 Map.of(1, 2));
 
         orderList.addAll(List.of(order1,
-                new CompositeOrder(4, 51, 22, "El-Dokki", null, 2,
+                new CompositeOrder(4, 22, "El-Dokki", null, 2,
                         List.of(order2, order3))));
     }
 

@@ -1,17 +1,23 @@
 package com.example.FCAI.api.model;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = SimpleOrder.class, name = "SimpleOrder"),
+        @JsonSubTypes.Type(value = CompositeOrder.class, name = "CompositeOrder")
+})
 public abstract class Order {
     protected int id;
-    protected double totalPrice;
     protected double shippingFee;
     protected String deliveryDistrict;
     protected String deliveryAddress;
     protected int customerID;
 
-    public Order(int id, double totalPrice, double shippingFee, String deliveryDistrict, String deliveryAddress,
+    public Order(int id, double shippingFee, String deliveryDistrict, String deliveryAddress,
             int customerID) {
         this.id = id;
-        this.totalPrice = totalPrice;
         this.shippingFee = shippingFee;
         this.deliveryDistrict = deliveryDistrict;
         this.deliveryAddress = deliveryAddress;
@@ -24,14 +30,6 @@ public abstract class Order {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
     }
 
     public String getDeliveryDistrict() {

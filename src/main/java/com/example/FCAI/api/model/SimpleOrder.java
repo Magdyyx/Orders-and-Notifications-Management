@@ -4,15 +4,24 @@ import java.util.Map;
 
 public class SimpleOrder extends Order {
     Map<Integer, Integer> products;
+    private double totalPrice;
 
     public SimpleOrder(int id, double totalPrice, double shippingFee, String deliveryDistrict, String deliveryAddress,
             int customerID, Map<Integer, Integer> products) {
-        super(id, totalPrice, shippingFee, deliveryDistrict, deliveryAddress, customerID);
+        super(id, shippingFee, deliveryDistrict, deliveryAddress, customerID);
         this.products = products;
     }
 
     public Map<Integer, Integer> getProducts() {
         return products;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public void setProducts(Map<Integer, Integer> products) {

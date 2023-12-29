@@ -24,7 +24,7 @@ public class OrderService {
     }
 
     public boolean createSimpleOrder(Order o) {
-        if (!checkOrder((SimpleOrder) o, o.getDeliveryDistrict()))
+        if (!checkOrder((SimpleOrder) o, o.getDeliveryDistrict(), o.getShippingFee()))
             return false;
 
         orderRepo.create(o);
@@ -32,14 +32,14 @@ public class OrderService {
     }
 
     public boolean createComplexOrder(Order o) {
-        if(!checkOrder((CompositeOrder) o, o.getDeliveryDistrict()))
+        if(!checkOrder((CompositeOrder) o, o.getDeliveryDistrict(), o.getShippingFee()))
             return false;
 
         // Create Order
         return true;
     }
 
-    private boolean checkOrder(Order o, String district) {
+    private boolean checkOrder(Order o, String district, double shippingFee) {
         if (district == null || o.getDeliveryDistrict() != district)
             return false;
 
@@ -67,7 +67,7 @@ public class OrderService {
 
     private boolean canCreateComplexOrder(CompositeOrder o) {
         for (Order order : o.getOrders()) {
-            if (!checkOrder(order, o.getDeliveryDistrict()))
+            if (!checkOrder(order, o.getDeliveryDistrict(), o.getShippingFee()))
                 return false;
         }
 
