@@ -5,9 +5,9 @@ import java.util.List;
 public class CompositeOrder extends Order {
     List<Order> orders;
 
-    public CompositeOrder(int id, double totalPrice, String district, String deliveryAddress, int customerID,
-            List<Order> orders) {
-        super(id, totalPrice, district, deliveryAddress, customerID);
+    public CompositeOrder(int id, double totalPrice, double shippingFee, String deliveryDistrict,
+            String deliveryAddress, int customerID, List<Order> orders) {
+        super(id, totalPrice, shippingFee, deliveryDistrict, deliveryAddress, customerID);
         this.orders = orders;
     }
 

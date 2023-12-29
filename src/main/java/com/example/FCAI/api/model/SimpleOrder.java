@@ -1,22 +1,22 @@
 package com.example.FCAI.api.model;
 
-import java.util.List;
+import java.util.Map;
 
 public class SimpleOrder extends Order {
-    List<Integer> productIDs;
+    Map<Integer, Integer> products;
 
-    public SimpleOrder(int id, double totalPrice, String district, String deliveryAddress, int customerID,
-            List<Integer> products) {
-        super(id, totalPrice, district, deliveryAddress, customerID);
-        this.productIDs = products;
+    public SimpleOrder(int id, double totalPrice, double shippingFee, String deliveryDistrict, String deliveryAddress,
+            int customerID, Map<Integer, Integer> products) {
+        super(id, totalPrice, shippingFee, deliveryDistrict, deliveryAddress, customerID);
+        this.products = products;
     }
 
-    public List<Integer> getProductIDs() {
-        return productIDs;
+    public Map<Integer, Integer> getProducts() {
+        return products;
     }
 
-    public void setProducts(List<Integer> products) {
-        this.productIDs = products;
+    public void setProducts(Map<Integer, Integer> products) {
+        this.products = products;
     }
 
     @Override

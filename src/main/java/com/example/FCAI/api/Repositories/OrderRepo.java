@@ -8,6 +8,7 @@ import com.example.FCAI.service.RepositoryService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -18,15 +19,31 @@ public class OrderRepo implements RepositoryService<Order> {
 
     public OrderRepo() {
         orderList = new ArrayList<Order>();
-        SimpleOrder order1 = new SimpleOrder(1, 28, "El-Haram", "Street1", 1,
-                Arrays.asList(1, 2, 3));
-        SimpleOrder order2 = new SimpleOrder(2, 11, "El-Dokki", "Street2", 2,
-                Arrays.asList(2, 2, 3));
-        SimpleOrder order3 = new SimpleOrder(3, 40, "El-Dokki", "Street3", 3,
-                Arrays.asList(1, 1));
+        SimpleOrder order1 = new SimpleOrder(
+                1,
+                28,
+                5.0,
+                "El-Haram",
+                "123 Main St",
+                1,
+                Map.of(1, 1, 2, 1, 3, 1));
+        SimpleOrder order2 = new SimpleOrder(
+                2,
+                11,
+                15,
+                "El-Dokki",
+                "Street2",
+                2,
+                Map.of(2, 2, 3, 1));
+        SimpleOrder order3 = new SimpleOrder(3,
+                40, 7,
+                "El-Dokki",
+                "Street3",
+                3,
+                Map.of(1, 2));
 
         orderList.addAll(List.of(order1,
-                new CompositeOrder(4, 51, "El-Dokki", null, 2,
+                new CompositeOrder(4, 51, 22, "El-Dokki", null, 2,
                         List.of(order2, order3))));
     }
 

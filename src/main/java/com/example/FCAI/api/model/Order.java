@@ -3,14 +3,17 @@ package com.example.FCAI.api.model;
 public abstract class Order {
     protected int id;
     protected double totalPrice;
+    protected double shippingFee;
     protected String deliveryDistrict;
     protected String deliveryAddress;
     protected int customerID;
 
-    public Order(int id, double totalPrice, String district, String deliveryAddress, int customerID) {
+    public Order(int id, double totalPrice, double shippingFee, String deliveryDistrict, String deliveryAddress,
+            int customerID) {
         this.id = id;
         this.totalPrice = totalPrice;
-        this.deliveryDistrict = district;
+        this.shippingFee = shippingFee;
+        this.deliveryDistrict = deliveryDistrict;
         this.deliveryAddress = deliveryAddress;
         this.customerID = customerID;
     }
@@ -53,6 +56,14 @@ public abstract class Order {
 
     public void setCustomerID(int customerID) {
         this.customerID = customerID;
+    }
+
+    public double getShippingFee() {
+        return shippingFee;
+    }
+
+    public void setShippingFee(double shippingFee) {
+        this.shippingFee = shippingFee;
     }
 
     public abstract String details();
