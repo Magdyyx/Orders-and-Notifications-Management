@@ -32,8 +32,12 @@ public class CustomerRepo implements RepositoryService <Customer>{
         customers.add(newCustomer);
         return newCustomer;
     }
+
+
+    // TODO: handle the new form of update
+    // TODO: update(existing, new)
     @Override
-    public Customer update(Customer customer) {
+    public Customer update(Customer customer, Customer t1) {
         for (Customer customer1 : customers) {
             if (customer1.getId() == customer.getId()) {
                 customer1.setName(customer.getName());

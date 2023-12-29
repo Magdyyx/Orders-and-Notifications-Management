@@ -24,42 +24,65 @@ public class ProductService {
     }
 
     public Product createProduct(Product product) {
+        Product existingProduct = productRepo.findById(product.getSerialNumber());
+        if (existingProduct != null) {
+            return null;
+        }
         return productRepo.create(product);
     }
 
     public Product updateProduct(int serialNumber, Product product) {
-        return productRepo.update(product);
+        Product existingProduct = productRepo.findById(serialNumber);
+        return productRepo.update(existingProduct, product);
     }
     public Product updateProductName(int serialNumber, String newName) {
-        Product product = productRepo.findById(serialNumber);
-        product.setName(newName);
-        return productRepo.update(product);
+        Product existingProduct = productRepo.findById(serialNumber);
+        Product updatedProduct = new Product(existingProduct);
+        updatedProduct.setName(newName);
+        return productRepo.update(existingProduct, updatedProduct);
     }
 
     public Product updateProductVendor(int serialNumber, String newVendor) {
-        Product product = productRepo.findById(serialNumber);
-        product.setVendor(newVendor);
-        return productRepo.update(product);
+        Product existingProduct = productRepo.findById(serialNumber);
+        Product updatedProduct = new Product(existingProduct);
+        existingProduct.setVendor(newVendor);
+        return productRepo.update(existingProduct, updatedProduct);
     }
     public Product updateProductCategory(int serialNumber, String category) {
-        Product product = productRepo.findById(serialNumber);
-        product.setCategory(category);
-        return productRepo.update(product);
+        Product existingProduct = productRepo.findById(serialNumber);
+        Product updatedProduct = new Product(existingProduct);
+        existingProduct.setCategory(category);
+        return productRepo.update(existingProduct, updatedProduct);
     }
     public Product updateProductPrice(int serialNumber, float newPrice) {
-        Product product = productRepo.findById(serialNumber);
-        product.setPrice(newPrice);
-        return productRepo.update(product);
+        Product existingProduct = productRepo.findById(serialNumber);
+        Product updatedProduct = new Product(existingProduct);
+        existingProduct.setPrice(newPrice);
+        return productRepo.update(existingProduct, updatedProduct);
     }
-    public Product updateProductRemainingQuantity(int serialNumber, int reductionQuantity) {
-        Product product = productRepo.findById(serialNumber);
-        product.setRemainingQuantity(product.getRemainingQuantity() - reductionQuantity);
-        return productRepo.update(product);
+    public Product updateRemainingQuantity(int serialNumber, int newRemainingQuantity) {
+        Product existingProduct = productRepo.findById(serialNumber);
+        Product updatedProduct = new Product(existingProduct);
+        existingProduct.setRemainingQuantity(newRemainingQuantity);
+        return productRepo.update(existingProduct, updatedProduct);
+    }
+
+    public Product reduceQuantity(int serialNumber, int reductionQuantity) {
+        Product existingProduct = productRepo.findById(serialNumber);
+        Product updatedProduct = new Product(existingProduct);
+        existingProduct.setRemainingQuantity(existingProduct.getRemainingQuantity() - reductionQuantity);
+        return productRepo.update(existingProduct, updatedProduct);
     }
 
 
     public void deleteProduct(Product product) {
-        productRepo.delete(product);
+        deleteProduct(product.getSerialNumber());
+    }
+
+    public void deleteProduct(int serialNumber) {
+        Product exisitingProduct = productRepo.findById(serialNumber);
+        productRepo.delete(exisitingProduct);
     }
 
 }
+

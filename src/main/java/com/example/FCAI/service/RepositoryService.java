@@ -7,7 +7,7 @@ import java.util.List;
 @Service
 public interface RepositoryService <T> {
     T create(T t);
-    T update(T t);
+    T update(T t, T t1);
     T delete(T t);
     T findById(int id);
     List<T> findAll();

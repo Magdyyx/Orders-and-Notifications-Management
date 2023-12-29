@@ -24,7 +24,7 @@ public class ProductController {
         return productService.getProducts();
     }
 
-    @GetMapping("/api/products/{serialNumber}")
+    @GetMapping("/{serialNumber}")
     public ResponseEntity<Product> getProductBySerialNumber(@PathVariable int serialNumber) {
         Product product = productService.getProduct(serialNumber);
         if (product == null) {
@@ -33,7 +33,7 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    @PostMapping("/api/products/create")
+    @PostMapping("/create")
     public ResponseEntity<?> createProduct(@RequestBody Product product) {
         Product createdProduct = productService.createProduct(product);
         if (createdProduct != null) {
@@ -46,7 +46,7 @@ public class ProductController {
         }
     }
 
-    @PutMapping ("/api/update/products/{serialNumber}")
+    @PutMapping ("/update/{serialNumber}")
     public ResponseEntity<Product> updateProduct(@PathVariable int serialNumber,@RequestBody Product product) {
         Product updatedProduct = productService.updateProduct(serialNumber, product);
 
@@ -57,7 +57,7 @@ public class ProductController {
         }
     }
 
-    @PutMapping("/api/update/products/name/{serialNumber}")
+    @PutMapping("/update/name/{serialNumber}")
     public ResponseEntity<Product> updateProductName(@PathVariable int serialNumber, @RequestBody String newName) {
         Product updatedProduct = productService.updateProductName(serialNumber, newName);
 
@@ -68,7 +68,7 @@ public class ProductController {
         }
     }
 
-    @PutMapping("/api/update/products/vendor/{serialNumber}")
+    @PutMapping("/update/vendor/{serialNumber}")
     public ResponseEntity<Product> updateProductVendor(@PathVariable int serialNumber, @RequestBody String vendor) {
         Product updatedProduct = productService.updateProductVendor(serialNumber, vendor);
 
@@ -79,7 +79,7 @@ public class ProductController {
         }
     }
 
-    @PutMapping("/api/update/products/category/{serialNumber}")
+    @PutMapping("/update/category/{serialNumber}")
     public ResponseEntity<Product> updateProductCategory(@PathVariable int serialNumber, @RequestBody String category) {
         Product updatedProduct = productService.updateProductCategory(serialNumber, category);
 
@@ -89,7 +89,7 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
     }
-    @PutMapping("/api/update/products/price/{serialNumber}")
+    @PutMapping("/update/price/{serialNumber}")
     public ResponseEntity<Product> updateProductCategory(@PathVariable int serialNumber, @RequestBody float price) {
         Product updatedProduct = productService.updateProductPrice(serialNumber, price);
 
@@ -100,9 +100,9 @@ public class ProductController {
         }
     }
 
-    @PutMapping("/api/update/products/quantity/{serialNumber}")
-    public ResponseEntity<Product> reduceQuantity(@PathVariable int serialNumber, @RequestBody int reductionQuantity) {
-        Product updatedProduct = productService.updateProductRemainingQuantity(serialNumber, reductionQuantity);
+    @PutMapping("/update/quantity/{serialNumber}")
+    public ResponseEntity<Product> updateQuantity(@PathVariable int serialNumber, @RequestBody int newQuantity) {
+        Product updatedProduct = productService.updateRemainingQuantity(serialNumber, newQuantity);
 
         if (updatedProduct != null) {
             return ResponseEntity.ok(updatedProduct);
@@ -111,7 +111,18 @@ public class ProductController {
         }
     }
 
-    @DeleteMapping ("/api/delete/products/{serialNumber}")
+    @PutMapping("/update/quantity/reduce/{serialNumber}")
+    public ResponseEntity<Product> reduceQuantity(@PathVariable int serialNumber, @RequestBody int reductionQuantity) {
+        Product updatedProduct = productService.reduceQuantity(serialNumber, reductionQuantity);
+
+        if (updatedProduct != null) {
+            return ResponseEntity.ok(updatedProduct);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping ("/delete/{serialNumber}")
     public ResponseEntity<Product> deleteProduct(@PathVariable int serialNumber) {
         Product deletedProduct = productService.getProduct(serialNumber);
         if (deletedProduct != null) {

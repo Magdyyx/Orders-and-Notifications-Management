@@ -17,6 +17,15 @@ public class Product {
         this.remainingQuantity = quantity;
     }
 
+    public Product(Product product) {
+        this.name = product.getName();
+        this.serialNumber = product.getSerialNumber();
+        this.vendor = product.getVendor();
+        this.category = product.getCategory();
+        this.price = product.getPrice();
+        this.remainingQuantity = product.remainingQuantity;
+    }
+
     public String getName() {
         return name;
     }
