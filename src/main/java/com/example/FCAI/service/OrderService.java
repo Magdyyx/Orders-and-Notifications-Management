@@ -24,8 +24,8 @@ public class OrderService {
         return true;
     }
 
-    public Order update(Order o) {
-        return orderRepo.update(o);
+    public Order update(Order oldOrder, Order o) {
+        return orderRepo.update(oldOrder, o);
     }
 
     public boolean delete(int id) {
