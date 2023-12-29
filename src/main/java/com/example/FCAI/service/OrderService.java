@@ -3,13 +3,11 @@ package com.example.FCAI.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.task.TaskExecutionProperties.Simple;
 import org.springframework.stereotype.Service;
 
 import com.example.FCAI.api.Repositories.OrderRepo;
 import com.example.FCAI.api.model.CompositeOrder;
 import com.example.FCAI.api.model.Order;
-import com.example.FCAI.api.model.Product;
 import com.example.FCAI.api.model.SimpleOrder;
 
 @Service
