@@ -24,16 +24,29 @@ public class CustomerService {
     }
 
     public Customer createCustomer(Customer customer) {
-        return customerRepo.create(customer);
+        Customer existingCustomer = customerRepo.findById(customer.getId());
+        if (existingCustomer != null) {
+            return null;
+        }
+        Customer newCustomer = new Customer(customer.getId(), customer.getName(), customer.getBalance());
+        return customerRepo.create(newCustomer);
     }
 
 
-    // TODO: handle the new form of update
-    public Customer updateCustomer(Customer updatedCustomer) {
-        return customerRepo.update(updatedCustomer, );
+    public Customer updateCustomer(int id, Customer updatedCustomer) {
+        Customer existingCustomer = customerRepo.findById(id);
+        if (existingCustomer == null) {
+            return null;
+        }
+        return customerRepo.update(existingCustomer, updatedCustomer);
     }
 
-    public void deleteCustomer(Customer existingCustomer) {
-        customerRepo.delete(existingCustomer);
+    public Customer deleteCustomer(int id) {
+        Customer existingCustomer = customerRepo.findById(id);
+        if (existingCustomer == null) {
+            return null;
+        }
+        return customerRepo.delete(existingCustomer);
+
     }
 }

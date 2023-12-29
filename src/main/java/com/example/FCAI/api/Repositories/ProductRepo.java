@@ -38,12 +38,8 @@ public class ProductRepo implements RepositoryService <Product> {
 
     @Override
     public Product delete(Product product) {
-        Product deletedProduct = null;
-        if(products.remove(product)){
-            deletedProduct = new Product(product);
-        }
-
-        return deletedProduct;
+        products.remove(product);
+        return product;
     }
 
     @Override

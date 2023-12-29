@@ -11,6 +11,11 @@ public class Customer {
         this.balance = balance;
     }
 
+    public Customer(Customer customer) {
+        this.id = customer.id;
+        this.name = customer.name;
+        this.balance = customer.balance;
+    }
 
 
     public int getId() {

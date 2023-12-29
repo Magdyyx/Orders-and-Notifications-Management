@@ -49,25 +49,22 @@ public class CustomerController {
     }
 
     @PutMapping ("/update/{id}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable int id,@RequestBody Customer updatedCustomer) {
+    public ResponseEntity<Customer> updateCustomer(@PathVariable int id,@RequestBody Customer customer) {
 
-        Customer existingCustomer = customerService.getCustomer(id);
-
-        if (existingCustomer != null) {
-            updatedCustomer.setId(id);
-            Customer updated = customerService.updateCustomer(updatedCustomer);
-            return ResponseEntity.ok(updated);
+        Customer updatedCustomer = customerService.updateCustomer(id,customer);
+        if (updatedCustomer != null) {
+            return ResponseEntity.ok(updatedCustomer);
         } else {
             return ResponseEntity.notFound().build();
         }
+
     }
 
     @DeleteMapping ("/delete/{id}")
     public ResponseEntity<Customer> deleteCustomer(@PathVariable int id) {
-        Customer existingCustomer = customerService.getCustomer(id);
-        if (existingCustomer != null) {
-            customerService.deleteCustomer(existingCustomer);
-            return ResponseEntity.ok(existingCustomer);
+        Customer deletedCustomer = customerService.deleteCustomer(id);
+        if (deletedCustomer != null) {
+            return ResponseEntity.ok(deletedCustomer);
         } else {
             return ResponseEntity.notFound().build();
         }

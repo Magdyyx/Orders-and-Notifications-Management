@@ -124,7 +124,7 @@ public class ProductController {
 
     @DeleteMapping ("/delete/{serialNumber}")
     public ResponseEntity<Product> deleteProduct(@PathVariable int serialNumber) {
-        Product deletedProduct = productService.getProduct(serialNumber);
+        Product deletedProduct = productService.deleteProduct(serialNumber);
         if (deletedProduct != null) {
             return ResponseEntity.ok(deletedProduct);
         } else {

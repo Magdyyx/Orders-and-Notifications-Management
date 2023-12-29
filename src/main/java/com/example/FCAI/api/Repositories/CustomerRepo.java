@@ -23,49 +23,34 @@ public class CustomerRepo implements RepositoryService <Customer>{
 
     @Override
     public Customer create(Customer customer) {
-        for (Customer customer1 : customers) {
-            if (customer1.getId() == customer.getId()) {
-                return null;
-            }
-        }
-        Customer newCustomer = new Customer(customer.getId(), customer.getName(), customer.getBalance());
-        customers.add(newCustomer);
-        return newCustomer;
+        customers.add(customer);
+        return customer;
     }
 
 
-    // TODO: handle the new form of update
-    // TODO: update(existing, new)
     @Override
     public Customer update(Customer customer, Customer t1) {
-        for (Customer customer1 : customers) {
-            if (customer1.getId() == customer.getId()) {
-                customer1.setName(customer.getName());
-                customer1.setBalance(customer.getBalance());
-                return customer1;
-            }
-        }
-        return null;
+        customer.setName(t1.getName());
+        customer.setBalance(t1.getBalance());
+        return customer;
     }
 
     @Override
     public Customer delete(Customer customer) {
-        for (Customer customer1 : customers) {
-            if (customer1.getId() == customer.getId()) {
-                customers.remove(customer1);
-                return customer1;
-            }
-        }
-        return null;
+        customers.remove(customer);
+        return customer;
     }
 
     @Override
     public Customer findById(int id) {
+        Customer foundCustomer;
         for (Customer customer : customers) {
             if (customer.getId() == id) {
-                return customer;
+                foundCustomer = new Customer(customer);
+                return foundCustomer;
             }
         }
+
         return null;
     }
 

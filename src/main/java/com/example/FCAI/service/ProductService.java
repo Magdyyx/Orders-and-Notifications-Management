@@ -6,6 +6,7 @@ import com.example.FCAI.api.model.Product;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
 @Service
 public class ProductService {
@@ -33,42 +34,47 @@ public class ProductService {
 
     public Product updateProduct(int serialNumber, Product product) {
         Product existingProduct = productRepo.findById(serialNumber);
+        if (existingProduct == null) {
+            return null;
+        }
         return productRepo.update(existingProduct, product);
     }
-    public Product updateProductName(int serialNumber, String newName) {
+
+    public <T> Product updateProductAttribute(int serialNumber, T attributeValue, BiConsumer<Product, T> attributeUpdater) {
         Product existingProduct = productRepo.findById(serialNumber);
+        if (existingProduct == null) {
+            return null;
+        }
         Product updatedProduct = new Product(existingProduct);
-        updatedProduct.setName(newName);
+        attributeUpdater.accept(updatedProduct, attributeValue);
         return productRepo.update(existingProduct, updatedProduct);
+    }
+    public Product updateProductName(int serialNumber, String newName) {
+        return updateProductAttribute(serialNumber, newName, Product::setName);
     }
 
     public Product updateProductVendor(int serialNumber, String newVendor) {
-        Product existingProduct = productRepo.findById(serialNumber);
-        Product updatedProduct = new Product(existingProduct);
-        existingProduct.setVendor(newVendor);
-        return productRepo.update(existingProduct, updatedProduct);
+        return updateProductAttribute(serialNumber, newVendor, Product::setVendor);
     }
+
     public Product updateProductCategory(int serialNumber, String category) {
-        Product existingProduct = productRepo.findById(serialNumber);
-        Product updatedProduct = new Product(existingProduct);
-        existingProduct.setCategory(category);
-        return productRepo.update(existingProduct, updatedProduct);
+        return updateProductAttribute(serialNumber, category, Product::setCategory);
     }
+
     public Product updateProductPrice(int serialNumber, float newPrice) {
-        Product existingProduct = productRepo.findById(serialNumber);
-        Product updatedProduct = new Product(existingProduct);
-        existingProduct.setPrice(newPrice);
-        return productRepo.update(existingProduct, updatedProduct);
+        return updateProductAttribute(serialNumber, newPrice, Product::setPrice);
     }
+
     public Product updateRemainingQuantity(int serialNumber, int newRemainingQuantity) {
-        Product existingProduct = productRepo.findById(serialNumber);
-        Product updatedProduct = new Product(existingProduct);
-        existingProduct.setRemainingQuantity(newRemainingQuantity);
-        return productRepo.update(existingProduct, updatedProduct);
+        return updateProductAttribute(serialNumber, newRemainingQuantity, Product::setRemainingQuantity);
     }
+
 
     public Product reduceQuantity(int serialNumber, int reductionQuantity) {
         Product existingProduct = productRepo.findById(serialNumber);
+        if (existingProduct == null) {
+            return null;
+        }
         Product updatedProduct = new Product(existingProduct);
         existingProduct.setRemainingQuantity(existingProduct.getRemainingQuantity() - reductionQuantity);
         return productRepo.update(existingProduct, updatedProduct);
@@ -79,9 +85,12 @@ public class ProductService {
         deleteProduct(product.getSerialNumber());
     }
 
-    public void deleteProduct(int serialNumber) {
+    public Product deleteProduct(int serialNumber) {
         Product exisitingProduct = productRepo.findById(serialNumber);
-        productRepo.delete(exisitingProduct);
+        if (exisitingProduct != null) {
+            return productRepo.delete(exisitingProduct);
+        }
+        return null;
     }
 
 }
