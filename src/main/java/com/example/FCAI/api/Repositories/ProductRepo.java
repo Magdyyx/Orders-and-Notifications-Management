@@ -22,51 +22,37 @@ public class ProductRepo implements RepositoryService <Product> {
     }
     @Override
     public Product create(Product product) {
-        for (Product currentProduct : products) {
-            if (currentProduct.getSerialNumber() == product.getSerialNumber()) {
+        Product newProduct = new Product(product);
+        products.add(product);
 
-                return null;
-            }
-        }
-        Product newProduct = new Product(product.getName(), product.getSerialNumber(),
-                product.getVendor(), product.getCategory(), product.getPrice(), product.getRemainingQuantity());
-        products.add(newProduct);
         return newProduct;
     }
 
     @Override
-    public Product update(Product product) {
-        for (Product currentProduct : products) {
-            if (currentProduct.getSerialNumber() == product.getSerialNumber()) {
-                currentProduct.setName(product.getName());
-                currentProduct.setVendor(product.getVendor());
-                currentProduct.setCategory(product.getCategory());
-                currentProduct.setPrice(product.getPrice());
-                currentProduct.setPrice(currentProduct.getRemainingQuantity());
+    public Product update(Product existingProduct, Product product) {
+        Product updatedProduct = new Product(product);
+        products.set(products.indexOf(existingProduct), product);
 
-                return currentProduct;
-            }
-        }
-        return null;
+        return updatedProduct;
     }
 
     @Override
     public Product delete(Product product) {
-        for (Product currentProduct : products) {
-            if (currentProduct.getSerialNumber() == product.getSerialNumber()) {
-                products.remove(currentProduct);
-                return currentProduct;
-            }
+        Product deletedProduct = null;
+        if(products.remove(product)){
+            deletedProduct = new Product(product);
         }
 
-        return null;
+        return deletedProduct;
     }
 
     @Override
     public Product findById(int serialNumber) {
+        Product foundProduct;
         for (Product currentProduct : products) {
             if (currentProduct.getSerialNumber() == serialNumber) {
-                return currentProduct;
+                foundProduct = new Product(currentProduct);
+                return foundProduct;
             }
         }
 
@@ -75,6 +61,10 @@ public class ProductRepo implements RepositoryService <Product> {
 
     @Override
     public List<Product> findAll() {
-        return products;
+        List<Product> allProducts = new ArrayList<>(products);
+        return allProducts;
     }
+
+
+
 }

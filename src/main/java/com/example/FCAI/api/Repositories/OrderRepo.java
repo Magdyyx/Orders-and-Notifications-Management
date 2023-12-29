@@ -37,18 +37,9 @@ public class OrderRepo implements RepositoryService<Order> {
     }
 
     @Override
-    public Order update(Order order) {
-        Order oldOrder = findById(order.getId());
-        if (oldOrder == null)
-            return null;
-
-        oldOrder = (order instanceof CompositeOrder)
-                ? new CompositeOrder(order.getId(), order.getTotalPrice(), order.getDeliveryDistrict(),
-                        order.getDeliveryAddress(), order.getCustomerID(), ((CompositeOrder) order).getOrders())
-                : new SimpleOrder(order.getId(), order.getTotalPrice(), order.getDeliveryDistrict(),
-                        order.getDeliveryAddress(), order.getCustomerID(), ((SimpleOrder) order).getProductIDs());
-
-        return oldOrder;
+    public Order update(Order oldOrder, Order order) {
+        orderList.set(orderList.indexOf(oldOrder), order);
+        return order;
     }
 
     @Override

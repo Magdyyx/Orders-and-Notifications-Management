@@ -27,8 +27,10 @@ public class CustomerService {
         return customerRepo.create(customer);
     }
 
+
+    // TODO: handle the new form of update
     public Customer updateCustomer(Customer updatedCustomer) {
-        return customerRepo.update(updatedCustomer);
+        return customerRepo.update(updatedCustomer, );
     }
 
     public void deleteCustomer(Customer existingCustomer) {
