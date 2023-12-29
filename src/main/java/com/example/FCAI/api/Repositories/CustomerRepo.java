@@ -23,22 +23,26 @@ public class CustomerRepo implements RepositoryService <Customer>{
 
     @Override
     public Customer create(Customer customer) {
+        Customer newCustomer = new Customer(customer);
         customers.add(customer);
-        return customer;
+        return newCustomer;
     }
 
 
     @Override
     public Customer update(Customer customer, Customer t1) {
+        Customer updatedCustomer = new Customer(t1);
+        customer.setId(t1.getId());
         customer.setName(t1.getName());
         customer.setBalance(t1.getBalance());
-        return customer;
+        return updatedCustomer;
     }
 
     @Override
     public Customer delete(Customer customer) {
+        Customer deletedCustomer = new Customer(customer);
         customers.remove(customer);
-        return customer;
+        return deletedCustomer;
     }
 
     @Override
@@ -56,6 +60,7 @@ public class CustomerRepo implements RepositoryService <Customer>{
 
     @Override
     public List<Customer> findAll() {
-        return customers;
+        List<Customer> allCustomers = new ArrayList<>(customers);
+        return allCustomers;
     }
 }
