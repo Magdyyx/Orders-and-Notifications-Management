@@ -17,7 +17,7 @@ public class OrderRepo implements RepositoryService<Order> {
     private List<Order> orderList;
 
     public OrderRepo() {
-//        orderList = new ArrayList<Order>();
+        orderList = new ArrayList<Order>();
 //        SimpleOrder order1 = new SimpleOrder(
 //                1,
 //                28,

@@ -115,6 +115,7 @@ public class OrderService {
         List<Product> products = productService.getProducts(requestedProducts);
         if (products.size() != requestedProducts.size())
             return null;
+        System.out.println("test 1 passed " + products.size() + " " + requestedProducts.size());
 
         double totalPrice = 0;
         for (int i = 0; i < products.size(); i++) {
@@ -123,16 +124,28 @@ public class OrderService {
             }
             totalPrice += products.get(i).getPrice() * requestedProducts.get(i).getQuantity();
         }
+        System.out.println("test 2 passed " + totalPrice);
+
         if (loggedInCustomer.getBalance() < totalPrice)
             return null;
 
+        System.out.println("test 3 passed " + loggedInCustomer.getBalance());
+
+
         loggedInCustomer.setBalance((loggedInCustomer.getBalance() - totalPrice));
+        System.out.println("test 4 passed: new customer balance " + loggedInCustomer.getBalance());
+
         customerService.updateCustomer(loggedInCustomer.getId(), loggedInCustomer);
+        System.out.println("test 5 passed: customer updated balance " + customerService.getCustomer(loggedInCustomer.getId()).getBalance());
+
         for (int i = 0; i < requestedProducts.size(); i++){
             productService.reduceQuantity(products.get(i).getSerialNumber(), requestedProducts.get(i).getQuantity());
+            System.out.println("test 6 passed: products remaining quantity updated " + productService.getProduct(products.get(i).getSerialNumber()).getRemainingQuantity());
         }
-        SimpleOrder order = new SimpleOrder(1, totalPrice, 30, "Giza", "ay7aga",loggedInCustomer.getId(), products);
+        SimpleOrder order = new SimpleOrder(1, totalPrice, 0, "Giza", "ay7aga",loggedInCustomer.getId(), products);
         orderRepo.create(order);
+        System.out.println("test 7 passed: new order placed " + orderRepo.findById(1).getCustomerID());
+
         return order;
     }
 }
