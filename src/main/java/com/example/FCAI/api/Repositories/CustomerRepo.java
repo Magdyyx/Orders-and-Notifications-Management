@@ -14,9 +14,9 @@ public class CustomerRepo implements RepositoryService <Customer>{
 
     public CustomerRepo() {
         customers = new ArrayList<>();
-        Customer customer1 = new Customer("Ahmed", 1000);
-        Customer customer2 = new Customer("Mohamed", 1000);
-        Customer customer3 = new Customer("Ali", 1000);
+        Customer customer1 = new Customer("Ahmed", 1000, "Giza","Haram");
+        Customer customer2 = new Customer("Mohamed", 1000, "Giza","Haram");
+        Customer customer3 = new Customer("Ali", 1000, "Giza","Haram");
         customers.addAll(List.of(customer1, customer2, customer3));
     }
 

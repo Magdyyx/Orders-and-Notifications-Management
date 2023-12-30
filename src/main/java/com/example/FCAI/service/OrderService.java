@@ -51,19 +51,15 @@ public class OrderService {
         return orderRepo.findAll();
     }
 
-    public SimpleOrder placeSimpleOrder(Customer loggedInCustomer, Map<Integer, Integer> requestedProducts,
-            String deliveryDistrict, String deliveryAddress) {
-        return placeSimpleOrder(loggedInCustomer, requestedProducts, Order.getShippingFeeCost(), deliveryDistrict,
-                deliveryAddress);
+    public SimpleOrder placeSimpleOrder(Customer loggedInCustomer, Map<Integer, Integer> requestedProducts) {
+        return placeSimpleOrder(loggedInCustomer, requestedProducts, Order.getShippingFeeCost());
     }
 
-    public SimpleOrder placeSimpleOrder(Customer customer, Map<Integer, Integer> requestedProducts, double shippingFee,
-            String deliveryDistrict, String deliveryAddress) {
+    public SimpleOrder placeSimpleOrder(Customer customer, Map<Integer, Integer> requestedProducts, double shippingFee) {
 
         // Check District and Address
-        if (deliveryDistrict == null || deliveryAddress == null)
+        if (customer.getDistrict() == null || customer.getAddress() == null)
             return null;
-
         List<Product> products = productService.getProducts(requestedProducts);
         if (products.size() != requestedProducts.size())
             return null;
@@ -93,7 +89,7 @@ public class OrderService {
             productService.reduceQuantity(products.get(i).getSerialNumber(), iterator.next().getValue());
             i++;
         }
-        SimpleOrder order = new SimpleOrder(totalPrice, shippingFee, deliveryDistrict, deliveryAddress,
+        SimpleOrder order = new SimpleOrder(totalPrice, shippingFee, customer.getDistrict(), customer.getAddress(),
                 customer.getId(), requestedProducts);
         orderRepo.create(order);
 
@@ -104,7 +100,8 @@ public class OrderService {
             Map<Integer, Map<Integer, Integer>> customersAndProducts) {
 
         double totalPrice = 0;
-
+        if (loggedInCustomer.getAddress() == null || loggedInCustomer.getDistrict() == null)
+            return null;
         // Check for Quantity
         Map<Integer, Integer> totalProducts = new HashMap<>();
 
@@ -138,6 +135,15 @@ public class OrderService {
                 return null;
             }
         }
+        //Check for same district for Customers
+        for (var entry : customersAndProducts.entrySet()) {
+            int customerId = entry.getKey();
+            // Step 1: Check District for each customer and their corresponding order
+            Customer customer = customerService.getCustomer(customerId);
+            if (customer == null || !customer.getDistrict().equals(loggedInCustomer.getDistrict())) {
+                return null;
+            }
+        }
 
         List<Order> confirmedOrders = new ArrayList<>();
 
@@ -145,8 +151,7 @@ public class OrderService {
             int customerId = entry.getKey();
             Map<Integer, Integer> productsMap = entry.getValue();
             Customer customer = customerService.getCustomer(customerId);
-            confirmedOrders.add(placeSimpleOrder(customer, productsMap,
-                    Order.getShippingFeeCost() / customersAndProducts.size(), "El-Dokki", "Haram"));
+            confirmedOrders.add(placeSimpleOrder(customer, productsMap,Order.getShippingFeeCost() / customersAndProducts.size()));
         }
 
         for (Order order : confirmedOrders) {
@@ -155,7 +160,7 @@ public class OrderService {
 
         // Create Composoite Order
         CompositeOrder compositeOrder = new CompositeOrder(totalPrice, Order.getShippingFeeCost(),
-                "El-Dokki", "Haram",
+                loggedInCustomer.getDistrict(), loggedInCustomer.getAddress(),
                 loggedInCustomer.getId(), confirmedOrders);
         orderRepo.create(compositeOrder);
 

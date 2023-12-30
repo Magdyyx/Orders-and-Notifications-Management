@@ -30,7 +30,7 @@ public class CustomerService {
         if (existingCustomer != null) {
             return null;
         }
-        Customer newCustomer = new Customer(customer.getId(), customer.getName(), customer.getBalance());
+        Customer newCustomer = new Customer(customer.getId(), customer.getName(), customer.getBalance(), customer.getDistrict(), customer.getAddress());
         return customerRepo.create(newCustomer);
     }
 
@@ -53,17 +53,24 @@ public class CustomerService {
     }
 
 
-    public Customer signUp(String name, int balance) {
-        Customer newCustomer = new Customer(name, balance);
+    public Customer signUp(String name, int balance, String District, String Address) {
+        Customer newCustomer = new Customer(name, balance, District, Address);
         return customerRepo.create(newCustomer);
     }
 
     public Customer login(Customer customer) {
         Customer existingCustomer = customerRepo.findById(customer.getId());
         if (existingCustomer == null) {
+            //print customer not found error to the console
+            System.out.println("Customer not found");
+
             return null;
         }
-        if (existingCustomer.getName().equals(customer.getName())&&existingCustomer.getBalance()==customer.getBalance()) {
+        if (    existingCustomer.getName().equals(customer.getName())
+                &&existingCustomer.getBalance()==customer.getBalance()
+                &&existingCustomer.getDistrict().equals(customer.getDistrict())
+                &&existingCustomer.getAddress().equals(customer.getAddress()))
+        {
             LoggedInCustomer.setLoggedInCustomer(customer);
             return existingCustomer;
         }

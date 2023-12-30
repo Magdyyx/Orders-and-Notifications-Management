@@ -13,6 +13,7 @@ public class SimpleOrder extends Order {
     }
 
 
+    @Override
     public Map<Integer, Integer> getProducts() {
         return products;
     }

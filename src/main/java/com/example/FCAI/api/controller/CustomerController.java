@@ -56,8 +56,9 @@ public class CustomerController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestParam String name, @RequestParam int balance) {
-        Customer createdCustomer = customerService.signUp(name, balance);
+    public ResponseEntity<?> signup(@RequestParam String name, @RequestParam int balance,
+            @RequestParam String District, @RequestParam String Address) {
+        Customer createdCustomer = customerService.signUp(name, balance, District, Address);
         if (createdCustomer != null) {
             SignUpResponse signUpResponse = new SignUpResponse("Customer signed up successfully.", createdCustomer);
             return ResponseEntity.ok(signUpResponse);
@@ -105,8 +106,7 @@ public class CustomerController {
 
     // Placing Orders
     @PostMapping("/placeSimpleOrder")
-    public ResponseEntity<?> placeSimpleOrder(@RequestBody Map<Integer, Integer> products,
-            @RequestParam String deliveryDistrict, @RequestParam String deliveryAddress) {
+    public ResponseEntity<?> placeSimpleOrder(@RequestBody Map<Integer, Integer> products) {
         // To be wrapped inside CustomerService
         Customer loggedInCustomer = LoggedInCustomer.getLoggedInCustomer();
         if (loggedInCustomer == null) {
@@ -116,8 +116,7 @@ public class CustomerController {
             return ResponseEntity.badRequest().body(errorResponse);
         }
         // changed SimpleOrder to abstract Order
-        Order simpleOrder = (Order) orderService.placeSimpleOrder(loggedInCustomer, products, deliveryDistrict,
-                deliveryAddress);
+        Order simpleOrder = (Order) orderService.placeSimpleOrder(loggedInCustomer, products);
         if (simpleOrder != null) {
             System.out.println("simpleOrder is Not null");
             System.out.println("Printing the Response message");

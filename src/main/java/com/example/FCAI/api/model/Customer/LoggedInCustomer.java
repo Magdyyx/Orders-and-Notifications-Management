@@ -8,11 +8,13 @@ public class LoggedInCustomer extends Customer {
 
         static Customer LoggedInCustomer;
 
-        public LoggedInCustomer(int id, String name, double balance) {
+        public LoggedInCustomer(int id, String name, double balance, String District, String Address) {
             this.id = id;
             this.name = name;
             this.balance = balance;
-            LoggedInCustomer = new Customer(id, name, balance);
+            this.district = District;
+            this.address = Address;
+            LoggedInCustomer = new Customer(id, name, balance, District, Address);
         }
         public LoggedInCustomer() {
         }

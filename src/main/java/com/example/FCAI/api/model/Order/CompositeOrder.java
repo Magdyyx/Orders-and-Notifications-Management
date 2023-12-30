@@ -1,6 +1,9 @@
 package com.example.FCAI.api.model.Order;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class CompositeOrder extends Order {
 
@@ -18,6 +21,23 @@ public class CompositeOrder extends Order {
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
+    }
+
+    @Override
+    public Map<Integer, Integer> getProducts() {
+        Map<Integer, Integer> totalProducts = new HashMap<>();
+
+        for (var order : orders) {
+            Map<Integer, Integer> products = order.getProducts();
+            for (Map.Entry<Integer, Integer> product : products.entrySet()) {
+                if (totalProducts.containsKey(product.getKey())) {
+                    totalProducts.put(product.getKey(), totalProducts.get(product.getKey()) + product.getValue());
+                } else {
+                    totalProducts.put(product.getKey(), product.getValue());
+                }
+            }
+        }
+        return totalProducts;
     }
 
     @Override

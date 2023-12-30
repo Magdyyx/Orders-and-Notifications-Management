@@ -3,6 +3,8 @@ package com.example.FCAI.api.model.Order;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import java.util.Map;
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = SimpleOrder.class, name = "SimpleOrder"),
@@ -28,6 +30,8 @@ public abstract class Order {
         this.customerID = customerID;
         this.totalPrice = totalPrice;
     }
+
+    public abstract Map<Integer,Integer> getProducts();
 
     public double getTotalPrice() {
         return totalPrice;
