@@ -1,13 +1,11 @@
 package com.example.FCAI.api.Repositories;
 
-import com.example.FCAI.api.model.Order.CompositeOrder;
 import com.example.FCAI.api.model.Order.Order;
 import com.example.FCAI.api.model.Order.SimpleOrder;
 import com.example.FCAI.service.RepositoryService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -49,7 +47,7 @@ public class OrderRepo implements RepositoryService<Order> {
         return orderList;
     }
 
-    public List<SimpleOrder> findAllSimpleOrders(List<Integer> serialNumbers) {
-    return null;
-    }
+    // public List<SimpleOrder> findAllSimpleOrders(List<Integer> serialNumbers) {
+    //     return null;
+    // }
 }

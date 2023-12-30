@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 })
 public abstract class Order {
     protected static int idCounter = 0;
+    protected static final double shippingFeeCost = 20;
 
     protected int id;
     protected double price;
@@ -63,6 +64,10 @@ public abstract class Order {
 
     public void setShippingFee(double shippingFee) {
         this.shippingFee = shippingFee;
+    }
+
+    public static double getShippingFeeCost() {
+        return shippingFeeCost;
     }
 
     public abstract String details();

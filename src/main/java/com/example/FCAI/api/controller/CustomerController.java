@@ -3,7 +3,6 @@ import com.example.FCAI.api.model.Customer.Customer;
 import com.example.FCAI.api.model.Customer.LoggedInCustomer;
 import com.example.FCAI.api.model.Order.Order;
 import com.example.FCAI.api.model.Order.SimpleOrder;
-import com.example.FCAI.api.model.RequestedProducts;
 import com.example.FCAI.api.model.UserAuthResponses.LoginResponse;
 import com.example.FCAI.api.model.UserAuthResponses.SignUpResponse;
 import com.example.FCAI.service.CustomerService;
@@ -111,7 +110,7 @@ public class CustomerController {
 
     //Placing Orders
     @PostMapping("/placeSimpleOrder")
-    public ResponseEntity<?> placeSimpleOrder(@RequestBody List<RequestedProducts> products) {
+    public ResponseEntity<?> placeSimpleOrder(@RequestBody Map<Integer, Integer> products) {
         //To be wrapped inside CustomerService
         Customer loggedInCustomer = LoggedInCustomer.getLoggedInCustomer();
         if (loggedInCustomer == null) {

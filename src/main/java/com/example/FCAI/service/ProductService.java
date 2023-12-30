@@ -2,11 +2,11 @@ package com.example.FCAI.service;
 
 import com.example.FCAI.api.Repositories.ProductRepo;
 import com.example.FCAI.api.model.Product;
-import com.example.FCAI.api.model.RequestedProducts;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 @Service
@@ -24,10 +24,14 @@ public class ProductService {
     public List<Product> getProducts() {
         return productRepo.findAll();
     }
-    public List<Product> getProducts(List<RequestedProducts> requestedProducts) {
+    public List<Product> getProducts(Map<Integer, Integer> requestedProducts) {
         List<Product> products = new ArrayList<>();
-        for (RequestedProducts product : requestedProducts) {
-            products.add(productRepo.findById(product.getSerialNumber()));
+        var iterator = requestedProducts.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Product product = productRepo.findById(iterator.next().getKey());
+            if (product != null) {
+                products.add(product);
+            }
         }
 
         return products;
