@@ -134,25 +134,28 @@ public class CustomerController {
             return ResponseEntity.badRequest().body(errorResponse);
         }
     }
-//    @PostMapping("/placeCompoundOrder")
-//    public ResponseEntity<?> placeCompoundOrder(@RequestParam List<Integer> serialNumbers) {
-//        Customer loggedInCustomer = LoggedInCustomer.getLoggedInCustomer();
-//        if (loggedInCustomer == null) {
-//            Map<String, String> errorResponse = new HashMap<>();
-//            errorResponse.put("Error", "Please login first");
-//
-//            return ResponseEntity.badRequest().body(errorResponse);
-//        }
-//        SimpleOrder simpleOrder = orderService.placeSimpleOrder(loggedInCustomer, serialNumbers);
-//        if (simpleOrder != null) {
-//            return ResponseEntity.ok(simpleOrder);
-//        } else {
-//            Map<String, String> errorResponse = new HashMap<>();
-//            errorResponse.put("Error", "Cannot Place Order");
-//
-//            return ResponseEntity.badRequest().body(errorResponse);
-//        }
-//    }
+
+    @PostMapping("/placeCompoundOrder")
+    public ResponseEntity<?> placeCompoundOrder(@RequestBody List<SimpleOrder> orders) {
+        //To be wrapped inside CustomerService
+        Customer loggedInCustomer = LoggedInCustomer.getLoggedInCustomer();
+        if (loggedInCustomer == null) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("Error", "Please login first");
+
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+
+        Order compoundOrder = orderService.placeCompoundOrder(loggedInCustomer, orders);
+        if (compoundOrder != null) {
+            return ResponseEntity.ok(compoundOrder);
+        } else {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("Error", "Cannot Place Order");
+
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+    }
 
 
 

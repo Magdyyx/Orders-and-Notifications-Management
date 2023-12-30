@@ -8,9 +8,19 @@ import java.util.Map;
 public class SimpleOrder extends Order {
     List<Product> products;
 
-    public SimpleOrder(int id, double totalPrice, double shippingFee, String deliveryDistrict, String deliveryAddress,
+    Map<Integer, Integer> productsQuantity;
+
+    public Map<Integer, Integer> getProductsQuantity() {
+        return productsQuantity;
+    }
+
+    public void setProductsQuantity(Map<Integer, Integer> productsQuantity) {
+        this.productsQuantity = productsQuantity;
+    }
+
+    public SimpleOrder(double totalPrice, double shippingFee, String deliveryDistrict, String deliveryAddress,
             int customerID, List<Product> products) {
-        super(id, shippingFee, deliveryDistrict, deliveryAddress, customerID);
+        super( shippingFee, deliveryDistrict, deliveryAddress, customerID);
         this.products = products;
     }
 

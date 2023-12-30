@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = CompositeOrder.class, name = "CompositeOrder")
 })
 public abstract class Order {
+    protected static int idCounter = 0;
+
     protected int id;
     protected double price;
     protected double shippingFee;
@@ -16,9 +18,9 @@ public abstract class Order {
     protected String deliveryAddress;
     protected int customerID;
 
-    public Order(int id, double shippingFee, String deliveryDistrict, String deliveryAddress,
+    public Order(double shippingFee, String deliveryDistrict, String deliveryAddress,
             int customerID) {
-        this.id = id;
+        this.id = idCounter++;
         this.shippingFee = shippingFee;
         this.deliveryDistrict = deliveryDistrict;
         this.deliveryAddress = deliveryAddress;
@@ -62,27 +64,6 @@ public abstract class Order {
     public void setShippingFee(double shippingFee) {
         this.shippingFee = shippingFee;
     }
-
-//    public void add(Order order) {
-//        throw new UnsupportedOperationException();
-//    }
-//
-//    public void remove(Order order) {
-//        throw new UnsupportedOperationException();
-//    }
-//
-//    public Order getChild(int i) {
-//        throw new UnsupportedOperationException();
-//    }
-//
-//    public int getNumOfChildren(){
-//        throw new UnsupportedOperationException();
-//    }
-//
-//    public boolean isSimple() {
-//        throw new UnsupportedOperationException();
-//    }
-
 
     public abstract String details();
 
