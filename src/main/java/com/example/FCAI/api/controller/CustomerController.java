@@ -3,6 +3,7 @@ import com.example.FCAI.api.model.Customer.Customer;
 import com.example.FCAI.api.model.Customer.LoggedInCustomer;
 import com.example.FCAI.api.model.Order.Order;
 import com.example.FCAI.api.model.Order.SimpleOrder;
+import com.example.FCAI.api.model.RequestedCompoundOrder;
 import com.example.FCAI.api.model.UserAuthResponses.LoginResponse;
 import com.example.FCAI.api.model.UserAuthResponses.SignUpResponse;
 import com.example.FCAI.service.CustomerService;
@@ -110,7 +111,7 @@ public class CustomerController {
 
     //Placing Orders
     @PostMapping("/placeSimpleOrder")
-    public ResponseEntity<?> placeSimpleOrder(@RequestBody Map<Integer, Integer> products) {
+    public ResponseEntity<?> placeSimpleOrder(@RequestBody Map<Integer, Integer> products, @RequestParam String deliveryDistrict, @RequestParam String deliveryAddress){
         //To be wrapped inside CustomerService
         Customer loggedInCustomer = LoggedInCustomer.getLoggedInCustomer();
         if (loggedInCustomer == null) {
@@ -135,7 +136,7 @@ public class CustomerController {
     }
 
     @PostMapping("/placeCompoundOrder")
-    public ResponseEntity<?> placeCompoundOrder(@RequestBody List<SimpleOrder> orders) {
+    public ResponseEntity<?> placeCompoundOrder(@RequestBody Map<Integer,Map<Integer,Integer>> customersAndProducts){
         //To be wrapped inside CustomerService
         Customer loggedInCustomer = LoggedInCustomer.getLoggedInCustomer();
         if (loggedInCustomer == null) {
@@ -144,17 +145,45 @@ public class CustomerController {
 
             return ResponseEntity.badRequest().body(errorResponse);
         }
-
-        Order compoundOrder = orderService.placeCompoundOrder(loggedInCustomer, orders);
+        // changed SimpleOrder to abstract Order
+        Order compoundOrder = (Order)orderService.placeCompoundOrder(loggedInCustomer, customersAndProducts);
         if (compoundOrder != null) {
+            System.out.println("compoundOrder is Not null");
+            System.out.println("Printing the Response message");
+            System.out.println(ResponseEntity.ok(compoundOrder));
             return ResponseEntity.ok(compoundOrder);
         } else {
+            System.out.println("compoundOrder is null");
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("Error", "Cannot Place Order");
-
             return ResponseEntity.badRequest().body(errorResponse);
         }
     }
+
+//    @PostMapping("/ShipOrder")
+//    public ResponseEntity<?> ShipOrder(@RequestBody Order order){
+//        //To be wrapped inside CustomerService
+//        Customer loggedInCustomer = LoggedInCustomer.getLoggedInCustomer();
+//        if (loggedInCustomer == null) {
+//            Map<String, String> errorResponse = new HashMap<>();
+//            errorResponse.put("Error", "Please login first");
+//
+//            return ResponseEntity.badRequest().body(errorResponse);
+//        }
+//        // changed SimpleOrder to abstract Order
+//        Order shippedOrder = (Order)orderService.ShipOrder(loggedInCustomer, order);
+//        if (shippedOrder != null) {
+//            System.out.println("shippedOrder is Not null");
+//            System.out.println("Printing the Response message");
+//            System.out.println(ResponseEntity.ok(shippedOrder));
+//            return ResponseEntity.ok(shippedOrder);
+//        } else {
+//            System.out.println("shippedOrder is null");
+//            Map<String, String> errorResponse = new HashMap<>();
+//            errorResponse.put("Error", "Cannot Ship Order");
+//            return ResponseEntity.badRequest().body(errorResponse);
+//        }
+//    }
 
 
 

@@ -1,12 +1,14 @@
 package com.example.FCAI.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.example.FCAI.api.model.Customer.Customer;
+import com.example.FCAI.api.model.Customer.LoggedInCustomer;
 import com.example.FCAI.api.model.Product;
-import com.example.FCAI.api.model.RequestedProducts;
+import com.example.FCAI.api.model.RequestedSimpleOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,8 +63,15 @@ public class OrderService {
     public List<Order> findAll() {
         return orderRepo.findAll();
     }
+    public SimpleOrder placeSimpleOrder(Customer loggedInCustomer, RequestedSimpleOrder requestedProducts) {
+        return placeSimpleOrder(loggedInCustomer, requestedProducts.getProductsAndQuantity(), Order.getShippingFeeCost(), requestedProducts.getDeliveryDistrict(), requestedProducts.getDeliveryAddress());
+    }
+    public SimpleOrder placeSimpleOrder(Customer customer, Map<Integer, Integer> requestedProducts, double shippingFee, String deliveryDistrict, String deliveryAddress) {
 
-    public SimpleOrder placeSimpleOrder(Customer loggedInCustomer, Map<Integer, Integer> requestedProducts) {
+        //Check District and Address
+        if (deliveryDistrict == null || deliveryAddress == null)
+            return null;
+
         List<Product> products = productService.getProducts(requestedProducts);
         if (products.size() != requestedProducts.size())
             return null;
@@ -79,63 +88,94 @@ public class OrderService {
             i++;
         }
 
-        if (loggedInCustomer.getBalance() < totalPrice + Order.getShippingFeeCost())
+        if (customer.getBalance() < totalPrice + shippingFee)
             return null;
 
-        loggedInCustomer.setBalance((loggedInCustomer.getBalance() - (totalPrice + Order.getShippingFeeCost())));
+        customer.setBalance((customer.getBalance() - (totalPrice + shippingFee)));
 
-        customerService.updateCustomer(loggedInCustomer.getId(), loggedInCustomer);
-
+        customerService.updateCustomer(customer.getId(), customer);
+        iterator = requestedProducts.entrySet().iterator();
         i = 0;
         while (iterator.hasNext()) {
+            //print the product name and quantity and total price
             productService.reduceQuantity(products.get(i).getSerialNumber(), iterator.next().getValue());
             i++;
         }
-        SimpleOrder order = new SimpleOrder(totalPrice, Order.getShippingFeeCost(), "El-Dokki", "Haram",
-                loggedInCustomer.getId(), requestedProducts);
+        SimpleOrder order = new SimpleOrder(totalPrice, shippingFee, "Giza", "Haram",
+                customer.getId(), requestedProducts);
         orderRepo.create(order);
 
         return order;
     }
 
-    // public boolean canPlaceSimpleOrder(SimpleOrder order) {
+    public CompositeOrder placeCompoundOrder(Customer loggedInCustomer, List<RequestedSimpleOrder> requestedSimpleOrders) {
 
-    // }
+        double totalPrice = 0;
 
-    // public Order placeCompoundOrder(Customer loggedInCustomer, List<SimpleOrder> orders) {
-    //     //Implement this method
-    //     //Products
-    //     Map<Integer, Integer> totalProducts = new HashMap<>();
+        //Check for Quantity
+        Map<Integer, Integer> totalProducts = new HashMap<>();
+
+        for (var customer : customersAndProducts.entrySet()) {
+            for (var product : customer.getValue().entrySet()) {
+                if (totalProducts.containsKey(product.getKey())) {
+                    totalProducts.put(product.getKey(), totalProducts.get(product.getKey()) + product.getValue());
+                } else {
+                    totalProducts.put(product.getKey(), product.getValue());
+                }
+            }
+        }
+        List<Product> products = productService.getProducts(totalProducts);
+        if (products.size() != totalProducts.size())
+            return null;
+
+        for (var product : totalProducts.entrySet()) {
+            if (product.getValue() > productService.getProduct(product.getKey()).getRemainingQuantity()) {
+                return null;
+            }
+        }
+        //Check for Balance
+        for (var entry : customersAndProducts.entrySet()) {
+            int customerId = entry.getKey();
+            Map<Integer, Integer> productsMap = entry.getValue();
+
+            // Step 1: Check balance for each customer and their corresponding order
+            Customer customer = customerService.getCustomer(customerId);
+            if (customer == null || customer.getBalance() < (calculateOrderTotalPrice(productsMap) + (Order.getShippingFeeCost() / customersAndProducts.size()))) {
+                return null;
+            }
+        }
+
+        List<Order> confirmedOrders = new ArrayList<>();
+
+        for (var entry : customersAndProducts.entrySet()) {
+            int customerId = entry.getKey();
+            Map<Integer, Integer> productsMap = entry.getValue();
+            Customer customer = customerService.getCustomer(customerId);
+            confirmedOrders.add(placeSimpleOrder(customer, productsMap,Order.getShippingFeeCost()/customersAndProducts.size(),"El-Dokki","Haram"));
+        }
+        //Create Composoite Order
+        CompositeOrder compositeOrder = new CompositeOrder(totalPrice, Order.getShippingFeeCost(), requestedSimpleOrders.get(0).getDeliveryDistrict(), requestedSimpleOrders.get(0).getDeliveryAddress(),
+                loggedInCustomer.getId(), confirmedOrders);
+        orderRepo.create(compositeOrder);
 
 
-    //     for (SimpleOrder order : orders) {
-    //         for (var product : order.getProducts().entrySet()) {
-    //             if (totalProducts.containsKey(product.getKey())) {
-    //                 totalProducts.put(product.getKey(), totalProducts.get(product.getKey()) + product.getValue());
-    //             } else {
-    //                 totalProducts.put(product.getKey(), product.getValue());
-    //             }
-    //         }
-    //     }
+        return compositeOrder;
+    }
 
-    //     //Customers
-    //     double totalPrice = 0;
+    // Helper method to calculate the total price of an order
+    private double calculateOrderTotalPrice(Map<Integer, Integer> productsMap) {
+        double orderTotalPrice = 0;
 
-    //     for (SimpleOrder order : orders) {
-    //         canPlaceSimpleOrder(order)
-    //         SimpleOrder simpleOrder = new SimpleOrder(order);
-    //         totalPrice += order.getTotalPrice();
-    //     }
+        for (var productEntry : productsMap.entrySet()) {
+            int productId = productEntry.getKey();
+            int quantity = productEntry.getValue();
+            Product product = productService.getProduct(productId);
+            orderTotalPrice += product.getPrice() * quantity;
+        }
 
-    //     if (loggedInCustomer.getBalance() < totalPrice)
-    //         return null;
-
-    //     loggedInCustomer.setBalance((loggedInCustomer.getBalance() - totalPrice));
-    //     customerService.updateCustomer(loggedInCustomer.getId(), loggedInCustomer);
-
-    //     CompositeOrder order = new CompositeOrder(totalPrice, 20, "Giza", "Haram", loggedInCustomer.getId(), orders);
-    //     orderRepo.create(order);
-
-    //     return order;
-    // }
+        return orderTotalPrice + Order.getShippingFeeCost();
+    }
 }
+
+
+

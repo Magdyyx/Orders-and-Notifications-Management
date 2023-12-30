@@ -3,11 +3,14 @@ package com.example.FCAI.api.model.Order;
 import java.util.List;
 
 public class CompositeOrder extends Order {
+
+
+
     List<Order> orders;
 
-    public CompositeOrder(double shippingFee, String deliveryDistrict,
+    public CompositeOrder(double totalPrice,double shippingFee, String deliveryDistrict,
             String deliveryAddress, int customerID, List<Order> orders) {
-        super(shippingFee, deliveryDistrict, deliveryAddress, customerID);
+        super(totalPrice,shippingFee, deliveryDistrict, deliveryAddress, customerID);
         this.orders = orders;
     }
 

@@ -13,19 +13,28 @@ public abstract class Order {
     protected static final double shippingFeeCost = 20;
 
     protected int id;
-    protected double price;
+    protected double totalPrice;
     protected double shippingFee;
     protected String deliveryDistrict;
     protected String deliveryAddress;
     protected int customerID;
 
-    public Order(double shippingFee, String deliveryDistrict, String deliveryAddress,
+    public Order(double totalPrice,double shippingFee, String deliveryDistrict, String deliveryAddress,
             int customerID) {
         this.id = idCounter++;
         this.shippingFee = shippingFee;
         this.deliveryDistrict = deliveryDistrict;
         this.deliveryAddress = deliveryAddress;
         this.customerID = customerID;
+        this.totalPrice = totalPrice;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public int getId() {
