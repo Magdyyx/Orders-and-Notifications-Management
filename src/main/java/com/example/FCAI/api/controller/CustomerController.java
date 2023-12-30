@@ -1,6 +1,7 @@
 package com.example.FCAI.api.controller;
 import com.example.FCAI.api.model.Customer.Customer;
 import com.example.FCAI.api.model.Customer.LoggedInCustomer;
+import com.example.FCAI.api.model.Order.Order;
 import com.example.FCAI.api.model.Order.SimpleOrder;
 import com.example.FCAI.api.model.RequestedProducts;
 import com.example.FCAI.api.model.UserAuthResponses.LoginResponse;
@@ -119,13 +120,17 @@ public class CustomerController {
 
             return ResponseEntity.badRequest().body(errorResponse);
         }
-        SimpleOrder simpleOrder = orderService.placeSimpleOrder(loggedInCustomer, products);
+        // changed SimpleOrder to abstract Order
+        Order simpleOrder = (Order)orderService.placeSimpleOrder(loggedInCustomer, products);
         if (simpleOrder != null) {
+            System.out.println("simpleOrder is Not null");
+            System.out.println("Printing the Response message");
+            System.out.println(ResponseEntity.ok(simpleOrder));
             return ResponseEntity.ok(simpleOrder);
         } else {
+            System.out.println("simpleOrder is null");
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("Error", "Cannot Place Order");
-
             return ResponseEntity.badRequest().body(errorResponse);
         }
     }

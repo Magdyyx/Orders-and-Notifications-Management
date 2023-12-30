@@ -133,7 +133,7 @@ public class OrderService {
 
 
         loggedInCustomer.setBalance((loggedInCustomer.getBalance() - totalPrice));
-        System.out.println("test 4 passed: new customer balance " + loggedInCustomer.getBalance());
+        System.out.println("test 4 passed: new loginCustomer balance " + loggedInCustomer.getBalance());
 
         customerService.updateCustomer(loggedInCustomer.getId(), loggedInCustomer);
         System.out.println("test 5 passed: customer updated balance " + customerService.getCustomer(loggedInCustomer.getId()).getBalance());
@@ -144,7 +144,13 @@ public class OrderService {
         }
         SimpleOrder order = new SimpleOrder(1, totalPrice, 0, "Giza", "ay7aga",loggedInCustomer.getId(), products);
         orderRepo.create(order);
-        System.out.println("test 7 passed: new order placed " + orderRepo.findById(1).getCustomerID());
+        System.out.println("test 7 passed: new order placed " + orderRepo.findById(1).getId());
+
+        if (order == null) {
+            System.out.println("Test 8 failed: order is null");
+        } else {
+            System.out.println("Test 8 passed: order is not null");
+        }
 
         return order;
     }
