@@ -148,6 +148,11 @@ public class OrderService {
             confirmedOrders.add(placeSimpleOrder(customer, productsMap,
                     Order.getShippingFeeCost() / customersAndProducts.size(), "El-Dokki", "Haram"));
         }
+
+        for (Order order : confirmedOrders) {
+            totalPrice += order.getTotalPrice();
+        }
+
         // Create Composoite Order
         CompositeOrder compositeOrder = new CompositeOrder(totalPrice, Order.getShippingFeeCost(),
                 "El-Dokki", "Haram",
