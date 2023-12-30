@@ -22,6 +22,10 @@ public class ProductService {
     public List<Product> getProducts() {
         return productRepo.findAll();
     }
+    public List<Product> getProducts(List<Integer> serialNumbers) {
+        return productRepo.findAll(serialNumbers);
+    }
+
 
     public Product createProduct(Product product) {
         Product existingProduct = productRepo.findById(product.getSerialNumber());

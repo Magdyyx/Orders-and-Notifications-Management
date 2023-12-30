@@ -61,6 +61,17 @@ public class ProductRepo implements RepositoryService <Product> {
         return allProducts;
     }
 
+    public List<Product> findAll(List<Integer> serialNumbers) {
+        List<Product> allProducts = new ArrayList<>();
+        for (Product product : products) {
+            if (serialNumbers.contains(product.getSerialNumber())) {
+                allProducts.add(new Product(product));
+            }
+        }
+        return allProducts;
+    }
+
+
 
 
 }

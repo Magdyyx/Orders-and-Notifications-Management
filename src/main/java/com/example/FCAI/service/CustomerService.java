@@ -2,6 +2,7 @@ package com.example.FCAI.service;
 
 import com.example.FCAI.api.Repositories.CustomerRepo;
 import com.example.FCAI.api.model.Customer.Customer;
+import com.example.FCAI.api.model.Customer.LoggedInCustomer;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,6 +64,7 @@ public class CustomerService {
             return null;
         }
         if (existingCustomer.getName().equals(customer.getName())&&existingCustomer.getBalance()==customer.getBalance()) {
+            LoggedInCustomer.setLoggedInCustomer(customer);
             return existingCustomer;
         }
         return null;

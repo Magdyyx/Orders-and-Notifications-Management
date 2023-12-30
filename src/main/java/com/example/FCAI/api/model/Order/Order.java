@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 })
 public abstract class Order {
     protected int id;
+    protected double price;
     protected double shippingFee;
     protected String deliveryDistrict;
     protected String deliveryAddress;

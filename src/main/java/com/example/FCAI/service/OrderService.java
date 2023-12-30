@@ -2,6 +2,8 @@ package com.example.FCAI.service;
 
 import java.util.List;
 
+import com.example.FCAI.api.model.Customer.Customer;
+import com.example.FCAI.api.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -106,5 +108,23 @@ public class OrderService {
 
     public List<Order> findAll() {
         return orderRepo.findAll();
+    }
+
+    public SimpleOrder placeSimpleOrder(Customer loggedInCustomer, List<Integer> serialNumbers) {
+        List<Product> products = productService.getProducts(serialNumbers);
+        if (products == null || products.size() != serialNumbers.size())
+            return null;
+        double totalPrice = 0;
+        for (Product product : products) {
+            totalPrice += product.getPrice();
+        }
+        if (loggedInCustomer.getBalance() < totalPrice)
+            return null;
+
+        loggedInCustomer.setBalance((int) (loggedInCustomer.getBalance() - totalPrice));
+        customerService.updateCustomer(loggedInCustomer.getId(), loggedInCustomer);
+        SimpleOrder order = new SimpleOrder(1, totalPrice, 30, "Giza", "ay7aga",loggedInCustomer.getId(), products);
+        orderRepo.create(order);
+        return order;
     }
 }

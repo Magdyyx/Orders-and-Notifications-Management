@@ -1,9 +1,11 @@
 package com.example.FCAI.api.controller;
 import com.example.FCAI.api.model.Customer.Customer;
 import com.example.FCAI.api.model.Customer.LoggedInCustomer;
+import com.example.FCAI.api.model.Order.SimpleOrder;
 import com.example.FCAI.api.model.UserAuthResponses.LoginResponse;
 import com.example.FCAI.api.model.UserAuthResponses.SignUpResponse;
 import com.example.FCAI.service.CustomerService;
+import com.example.FCAI.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +18,13 @@ import java.util.Map;
 @RequestMapping ("/api/customers")
 public class CustomerController {
     private CustomerService customerService;
-    private ProductController productController;
+    private OrderService orderService;
+
 
     @Autowired
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, OrderService orderService) {
         this.customerService = customerService;
+        this.orderService = orderService;
     }
 
     @GetMapping
@@ -69,7 +73,6 @@ public class CustomerController {
     public ResponseEntity<?> login(@RequestBody Customer logincustomer) {
         Customer loggedInCustomer = customerService.login(logincustomer);
         if (loggedInCustomer != null) {
-            LoggedInCustomer.setLoggedInCustomer(loggedInCustomer);
             LoginResponse loginResponse = new LoginResponse("Customer logged in successfully", loggedInCustomer);
             return ResponseEntity.ok(loginResponse);
         } else {
@@ -101,6 +104,47 @@ public class CustomerController {
             return ResponseEntity.ok(deletedCustomer);
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    //Placing Orders
+    @PostMapping("/placeSimpleOrder")
+    public ResponseEntity<?> placeSimpleOrder(@RequestParam List<Integer> serialNumbers) {
+        //To be wrapped inside CustomerService
+        Customer loggedInCustomer = LoggedInCustomer.getLoggedInCustomer();
+        if (loggedInCustomer == null) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("Error", "Please login first");
+
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+        SimpleOrder simpleOrder = orderService.placeSimpleOrder(loggedInCustomer, serialNumbers);
+        if (simpleOrder != null) {
+            return ResponseEntity.ok(simpleOrder);
+        } else {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("Error", "Cannot Place Order");
+
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+    }
+    @PostMapping("/placeCompoundOrder")
+    public ResponseEntity<?> placeCompoundOrder(@RequestParam List<Integer> serialNumbers) {
+        Customer loggedInCustomer = LoggedInCustomer.getLoggedInCustomer();
+        if (loggedInCustomer == null) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("Error", "Please login first");
+
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+        SimpleOrder simpleOrder = orderService.placeSimpleOrder(loggedInCustomer, serialNumbers);
+        if (simpleOrder != null) {
+            return ResponseEntity.ok(simpleOrder);
+        } else {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("Error", "Cannot Place Order");
+
+            return ResponseEntity.badRequest().body(errorResponse);
         }
     }
 

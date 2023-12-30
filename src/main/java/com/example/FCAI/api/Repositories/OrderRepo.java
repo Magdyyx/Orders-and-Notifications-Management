@@ -74,4 +74,8 @@ public class OrderRepo implements RepositoryService<Order> {
     public List<Order> findAll() {
         return orderList;
     }
+
+    public List<SimpleOrder> findAllSimpleOrders(List<Integer> serialNumbers) {
+    return null;
+    }
 }
