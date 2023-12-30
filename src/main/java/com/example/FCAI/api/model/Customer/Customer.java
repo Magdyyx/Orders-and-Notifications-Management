@@ -1,15 +1,12 @@
 package com.example.FCAI.api.model.Customer;
 
-
 public class Customer {
-
     private static int lastId = 0;
     int id;
     String name;
     double balance;
     String district;
     String address;
-
 
     public Customer(int id, String name, double balance, String District, String Address) {
         this.id = id;
@@ -18,6 +15,7 @@ public class Customer {
         this.district = District;
         this.address = Address;
     }
+
     public Customer(String name, double balance, String District, String Address) {
         this.id = lastId++;
         this.name = name;
@@ -25,9 +23,9 @@ public class Customer {
         this.district = District;
         this.address = Address;
     }
+
     public Customer() {
     }
-
 
     public Customer(Customer customer) {
         this.id = customer.id;
@@ -36,7 +34,6 @@ public class Customer {
         this.district = customer.district;
         this.address = customer.address;
     }
-
 
     public int getId() {
         return id;
@@ -55,12 +52,13 @@ public class Customer {
     }
 
     public void setName(String name) {
-        this.name= name;
+        this.name = name;
     }
 
     public void setBalance(double balance) {
         this.balance = balance;
     }
+
     public String getDistrict() {
         return district;
     }
@@ -76,7 +74,4 @@ public class Customer {
     public void setAddress(String Address) {
         this.address = Address;
     }
-
-
-
 }

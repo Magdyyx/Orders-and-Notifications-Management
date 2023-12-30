@@ -21,7 +21,7 @@ public abstract class Order {
     protected String deliveryAddress;
     protected int customerID;
 
-    public Order(double totalPrice,double shippingFee, String deliveryDistrict, String deliveryAddress,
+    public Order(double totalPrice, double shippingFee, String deliveryDistrict, String deliveryAddress,
             int customerID) {
         this.id = idCounter++;
         this.shippingFee = shippingFee;
@@ -30,8 +30,6 @@ public abstract class Order {
         this.customerID = customerID;
         this.totalPrice = totalPrice;
     }
-
-    public abstract Map<Integer,Integer> getProducts();
 
     public double getTotalPrice() {
         return totalPrice;
@@ -73,8 +71,6 @@ public abstract class Order {
         this.customerID = customerID;
     }
 
-    public abstract double getShippingFee();
-
     public void setShippingFee(double shippingFee) {
         this.shippingFee = shippingFee;
     }
@@ -83,6 +79,9 @@ public abstract class Order {
         return shippingFeeCost;
     }
 
-    public abstract String details();
+    public double getShippingFee() {
+        return shippingFee;
+    }
 
+    public abstract Map<Integer, Integer> getProducts();
 }

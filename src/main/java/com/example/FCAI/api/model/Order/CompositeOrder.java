@@ -1,7 +1,6 @@
 package com.example.FCAI.api.model.Order;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -40,17 +39,12 @@ public class CompositeOrder extends Order {
         return totalProducts;
     }
 
-    @Override
-    public double getShippingFee() {
-        return shippingFee;
-    }
-
     public int getNumOfChildren() {
         return orders.size();
     }
 
     @Override
-    public String details() {
-        throw new UnsupportedOperationException("Unimplemented method 'details'");
+    public String toString() {
+        return String.format("Compound Order: {0}", this);
     }
 }

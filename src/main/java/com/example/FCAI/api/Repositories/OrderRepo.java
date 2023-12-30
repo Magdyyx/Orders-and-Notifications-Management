@@ -1,7 +1,6 @@
 package com.example.FCAI.api.Repositories;
 
 import com.example.FCAI.api.model.Order.Order;
-import com.example.FCAI.api.model.Order.SimpleOrder;
 import com.example.FCAI.service.RepositoryService;
 
 import java.util.ArrayList;
@@ -46,8 +45,4 @@ public class OrderRepo implements RepositoryService<Order> {
     public List<Order> findAll() {
         return orderList;
     }
-
-    // public List<SimpleOrder> findAllSimpleOrders(List<Integer> serialNumbers) {
-    //     return null;
-    // }
 }

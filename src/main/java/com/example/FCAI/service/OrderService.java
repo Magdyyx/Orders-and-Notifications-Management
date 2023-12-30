@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.FCAI.api.model.Customer.Customer;
-import com.example.FCAI.api.model.Customer.LoggedInCustomer;
 import com.example.FCAI.api.model.Product;
-import com.example.FCAI.api.model.RequestedCompoundOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +54,6 @@ public class OrderService {
     }
 
     public SimpleOrder placeSimpleOrder(Customer customer, Map<Integer, Integer> requestedProducts, double shippingFee) {
-
         // Check District and Address
         if (customer.getDistrict() == null || customer.getAddress() == null)
             return null;
@@ -85,7 +82,6 @@ public class OrderService {
         iterator = requestedProducts.entrySet().iterator();
         i = 0;
         while (iterator.hasNext()) {
-            // print the product name and quantity and total price
             productService.reduceQuantity(products.get(i).getSerialNumber(), iterator.next().getValue());
             i++;
         }

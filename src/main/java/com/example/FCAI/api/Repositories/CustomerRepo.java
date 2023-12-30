@@ -8,18 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CustomerRepo implements RepositoryService <Customer>{
+public class CustomerRepo implements RepositoryService<Customer> {
     private List<Customer> customers;
-
 
     public CustomerRepo() {
         customers = new ArrayList<>();
-        Customer customer1 = new Customer("Ahmed", 1000, "Giza","Haram");
-        Customer customer2 = new Customer("Mohamed", 1000, "Giza","Haram");
-        Customer customer3 = new Customer("Ali", 1000, "Giza","Haram");
+        Customer customer1 = new Customer("Ahmed", 1000, "Giza", "Haram");
+        Customer customer2 = new Customer("Mohamed", 1000, "Giza", "Haram");
+        Customer customer3 = new Customer("Ali", 1000, "Giza", "Haram");
         customers.addAll(List.of(customer1, customer2, customer3));
     }
-
 
     @Override
     public Customer create(Customer customer) {
@@ -27,7 +25,6 @@ public class CustomerRepo implements RepositoryService <Customer>{
         customers.add(customer);
         return newCustomer;
     }
-
 
     @Override
     public Customer update(Customer customer, Customer t1) {

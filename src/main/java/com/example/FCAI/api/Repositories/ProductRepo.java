@@ -8,9 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ProductRepo implements RepositoryService <Product> {
+public class ProductRepo implements RepositoryService<Product> {
     private List<Product> products;
-
 
     public ProductRepo() {
         products = new ArrayList<>();
@@ -20,6 +19,7 @@ public class ProductRepo implements RepositoryService <Product> {
         products.addAll(List.of(product1, product2, product3));
 
     }
+
     @Override
     public Product create(Product product) {
         Product newProduct = new Product(product);
@@ -65,5 +65,4 @@ public class ProductRepo implements RepositoryService <Product> {
         List<Product> allProducts = new ArrayList<>(products);
         return allProducts;
     }
-
 }

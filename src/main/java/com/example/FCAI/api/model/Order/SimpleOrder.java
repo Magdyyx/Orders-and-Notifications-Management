@@ -7,11 +7,10 @@ public class SimpleOrder extends Order {
 
     public SimpleOrder(double totalPrice, double shippingFee, String deliveryDistrict, String deliveryAddress,
             int customerID, Map<Integer, Integer> products) {
-        super(totalPrice,shippingFee, deliveryDistrict, deliveryAddress, customerID);
+        super(totalPrice, shippingFee, deliveryDistrict, deliveryAddress, customerID);
         this.products = products;
 
     }
-
 
     @Override
     public Map<Integer, Integer> getProducts() {
@@ -23,12 +22,7 @@ public class SimpleOrder extends Order {
     }
 
     @Override
-    public double getShippingFee() {
-        return shippingFee;
-    }
-
-    @Override
-    public String details() {
-        throw new UnsupportedOperationException("Unimplemented method 'details'");
+    public String toString() {
+        return String.format("Simple Order: {0}", this);
     }
 }

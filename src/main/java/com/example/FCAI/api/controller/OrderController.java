@@ -11,7 +11,7 @@ import com.example.FCAI.service.OrderService;
 import java.util.List;
 
 @RestController
-@RequestMapping ("/api/orders")
+@RequestMapping("/api/orders")
 public class OrderController {
     @Autowired
     private OrderService orderService;
@@ -20,11 +20,9 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-
     @GetMapping
     public List<Order> getOrders() {
         return orderService.findAll();
     }
-
 
 }
