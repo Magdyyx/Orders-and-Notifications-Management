@@ -1,6 +1,9 @@
-package com.example.FCAI.api.model;
+package com.example.FCAI.api.model.Customer;
+
 
 public class Customer {
+
+    private static int lastId = 0;
     int id;
     String name;
     int balance;
@@ -10,6 +13,14 @@ public class Customer {
         this.name = name;
         this.balance = balance;
     }
+    public Customer(String name, int balance) {
+        this.id = lastId++;
+        this.name = name;
+        this.balance = balance;
+    }
+    public Customer() {
+    }
+
 
     public Customer(Customer customer) {
         this.id = customer.id;

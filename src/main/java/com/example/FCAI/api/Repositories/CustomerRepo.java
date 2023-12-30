@@ -1,6 +1,6 @@
 package com.example.FCAI.api.Repositories;
 
-import com.example.FCAI.api.model.Customer;
+import com.example.FCAI.api.model.Customer.Customer;
 import com.example.FCAI.service.RepositoryService;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +14,9 @@ public class CustomerRepo implements RepositoryService <Customer>{
 
     public CustomerRepo() {
         customers = new ArrayList<>();
-        Customer customer1 = new Customer(1, "Ahmed", 30);
-        Customer customer2 = new Customer(2, "Mohamed", 20);
-        Customer customer3 = new Customer(3, "Ali", 40);
+        Customer customer1 = new Customer("Ahmed", 30);
+        Customer customer2 = new Customer("Mohamed", 20);
+        Customer customer3 = new Customer("Ali", 40);
         customers.addAll(List.of(customer1, customer2, customer3));
     }
 

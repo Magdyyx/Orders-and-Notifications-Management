@@ -1,7 +1,7 @@
 package com.example.FCAI.service;
 
 import com.example.FCAI.api.Repositories.CustomerRepo;
-import com.example.FCAI.api.model.Customer;
+import com.example.FCAI.api.model.Customer.Customer;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +13,7 @@ public class CustomerService {
     public CustomerService(CustomerRepo customerRepo) {
         this.customerRepo = customerRepo;
     }
+
 
 
     public Customer getCustomer(int id) {
@@ -49,4 +50,22 @@ public class CustomerService {
         return customerRepo.delete(existingCustomer);
 
     }
+
+
+    public Customer signUp(String name, int balance) {
+        Customer newCustomer = new Customer(name, balance);
+        return customerRepo.create(newCustomer);
+    }
+
+    public Customer login(Customer customer) {
+        Customer existingCustomer = customerRepo.findById(customer.getId());
+        if (existingCustomer == null) {
+            return null;
+        }
+        if (existingCustomer.getName().equals(customer.getName())&&existingCustomer.getBalance()==customer.getBalance()) {
+            return existingCustomer;
+        }
+        return null;
+    }
+
 }

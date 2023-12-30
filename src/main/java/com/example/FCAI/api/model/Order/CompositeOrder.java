@@ -1,4 +1,4 @@
-package com.example.FCAI.api.model;
+package com.example.FCAI.api.model.Order;
 
 import java.util.List;
 

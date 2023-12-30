@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.FCAI.api.Repositories.OrderRepo;
-import com.example.FCAI.api.model.CompositeOrder;
-import com.example.FCAI.api.model.Order;
-import com.example.FCAI.api.model.SimpleOrder;
+import com.example.FCAI.api.model.Order.CompositeOrder;
+import com.example.FCAI.api.model.Order.Order;
+import com.example.FCAI.api.model.Order.SimpleOrder;
 
 @Service
 public class OrderService {

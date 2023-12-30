@@ -1,7 +1,6 @@
 package com.example.FCAI.service;
 
 import com.example.FCAI.api.Repositories.ProductRepo;
-import com.example.FCAI.api.model.Customer;
 import com.example.FCAI.api.model.Product;
 import org.springframework.stereotype.Service;
 

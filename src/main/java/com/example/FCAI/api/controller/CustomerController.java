@@ -1,6 +1,8 @@
 package com.example.FCAI.api.controller;
-import com.example.FCAI.api.Repositories.CustomerRepo;
-import com.example.FCAI.api.model.Customer;
+import com.example.FCAI.api.model.Customer.Customer;
+import com.example.FCAI.api.model.Customer.LoggedInCustomer;
+import com.example.FCAI.api.model.UserAuthResponses.LoginResponse;
+import com.example.FCAI.api.model.UserAuthResponses.SignUpResponse;
 import com.example.FCAI.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import java.util.Map;
 @RequestMapping ("/api/customers")
 public class CustomerController {
     private CustomerService customerService;
+    private ProductController productController;
 
     @Autowired
     public CustomerController(CustomerService customerService) {
@@ -48,6 +51,36 @@ public class CustomerController {
         }
     }
 
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@RequestParam String name, @RequestParam int balance) {
+        Customer createdCustomer = customerService.signUp(name, balance);
+        if (createdCustomer != null) {
+            SignUpResponse signUpResponse = new SignUpResponse("Customer signed up successfully.", createdCustomer);
+            return ResponseEntity.ok(signUpResponse);
+        } else {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("Error", "Customer already exists");
+
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Customer logincustomer) {
+        Customer loggedInCustomer = customerService.login(logincustomer);
+        if (loggedInCustomer != null) {
+            LoggedInCustomer.setLoggedInCustomer(loggedInCustomer);
+            LoginResponse loginResponse = new LoginResponse("Customer logged in successfully", loggedInCustomer);
+            return ResponseEntity.ok(loginResponse);
+        } else {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("Error", "Invalid login credentials");
+
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+    }
+
+
     @PutMapping ("/update/{id}")
     public ResponseEntity<Customer> updateCustomer(@PathVariable int id,@RequestBody Customer customer) {
 
@@ -60,6 +93,7 @@ public class CustomerController {
 
     }
 
+
     @DeleteMapping ("/delete/{id}")
     public ResponseEntity<Customer> deleteCustomer(@PathVariable int id) {
         Customer deletedCustomer = customerService.deleteCustomer(id);
@@ -69,5 +103,7 @@ public class CustomerController {
             return ResponseEntity.notFound().build();
         }
     }
+
+
 
 }

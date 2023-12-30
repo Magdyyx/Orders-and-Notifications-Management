@@ -1,8 +1,8 @@
 package com.example.FCAI.api.Repositories;
 
-import com.example.FCAI.api.model.CompositeOrder;
-import com.example.FCAI.api.model.Order;
-import com.example.FCAI.api.model.SimpleOrder;
+import com.example.FCAI.api.model.Order.CompositeOrder;
+import com.example.FCAI.api.model.Order.Order;
+import com.example.FCAI.api.model.Order.SimpleOrder;
 import com.example.FCAI.service.RepositoryService;
 
 import java.util.ArrayList;
