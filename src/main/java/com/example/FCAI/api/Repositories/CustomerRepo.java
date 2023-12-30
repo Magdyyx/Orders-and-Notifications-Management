@@ -31,11 +31,15 @@ public class CustomerRepo implements RepositoryService <Customer>{
 
     @Override
     public Customer update(Customer customer, Customer t1) {
-        Customer updatedCustomer = new Customer(t1);
-        customer.setId(t1.getId());
-        customer.setName(t1.getName());
-        customer.setBalance(t1.getBalance());
-        return updatedCustomer;
+        for (Customer currentCustomer : customers) {
+            if (currentCustomer.getId() == customer.getId()) {
+                Customer updatedCustomer = new Customer(t1);
+                customers.set(customers.indexOf(currentCustomer), t1);
+                return updatedCustomer;
+            }
+        }
+
+        return null;
     }
 
     @Override

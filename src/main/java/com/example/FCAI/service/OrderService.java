@@ -136,6 +136,7 @@ public class OrderService {
         System.out.println("test 4 passed: new loginCustomer balance " + loggedInCustomer.getBalance());
 
         customerService.updateCustomer(loggedInCustomer.getId(), loggedInCustomer);
+
         System.out.println("test 5 passed: customer updated balance " + customerService.getCustomer(loggedInCustomer.getId()).getBalance());
 
         for (int i = 0; i < requestedProducts.size(); i++){
