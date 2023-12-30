@@ -20,6 +20,30 @@ public class CompositeOrder extends Order {
     }
 
     @Override
+    public void add(Order order) {
+        orders.add(order);
+    }
+
+    @Override
+    public void remove(Order order) {
+        order.remove(order);
+    }
+
+    @Override
+    public Order getChild(int i) {
+        return (Order) orders.get(i);
+    }
+
+    @Override
+    public double getShippingFee() {
+        return shippingFee;
+    }
+
+    public int getNumOfChildren(){
+        return orders.size();
+    }
+
+    @Override
     public String details() {
         throw new UnsupportedOperationException("Unimplemented method 'details'");
     }

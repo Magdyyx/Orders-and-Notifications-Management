@@ -30,10 +30,15 @@ public class ProductRepo implements RepositoryService <Product> {
 
     @Override
     public Product update(Product existingProduct, Product product) {
-        Product updatedProduct = new Product(product);
-        products.set(products.indexOf(existingProduct), product);
+        for (Product currentProduct : products) {
+            if (currentProduct.getSerialNumber() == existingProduct.getSerialNumber()) {
+                Product updatedProduct = new Product(product);
+                products.set(products.indexOf(currentProduct), product);
+                return updatedProduct;
+            }
+        }
 
-        return updatedProduct;
+        return null;
     }
 
     @Override
@@ -60,18 +65,5 @@ public class ProductRepo implements RepositoryService <Product> {
         List<Product> allProducts = new ArrayList<>(products);
         return allProducts;
     }
-
-    public List<Product> findAll(List<Integer> serialNumbers) {
-        List<Product> allProducts = new ArrayList<>();
-        for (Product product : products) {
-            if (serialNumbers.contains(product.getSerialNumber())) {
-                allProducts.add(new Product(product));
-            }
-        }
-        return allProducts;
-    }
-
-
-
 
 }

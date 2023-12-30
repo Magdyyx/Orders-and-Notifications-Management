@@ -57,13 +57,33 @@ public abstract class Order {
         this.customerID = customerID;
     }
 
-    public double getShippingFee() {
-        return shippingFee;
-    }
+    public abstract double getShippingFee();
 
     public void setShippingFee(double shippingFee) {
         this.shippingFee = shippingFee;
     }
 
+    public void add(Order order) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void remove(Order order) {
+        throw new UnsupportedOperationException();
+    }
+
+    public Order getChild(int i) {
+        throw new UnsupportedOperationException();
+    }
+
+    public int getNumOfChildren(){
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean isSimple() {
+        throw new UnsupportedOperationException();
+    }
+
+
     public abstract String details();
+
 }

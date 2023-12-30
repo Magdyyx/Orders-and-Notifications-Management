@@ -6,14 +6,14 @@ public class Customer {
     private static int lastId = 0;
     int id;
     String name;
-    int balance;
+    double balance;
 
-    public Customer(int id, String name, int balance) {
+    public Customer(int id, String name, double balance) {
         this.id = id;
         this.name = name;
         this.balance = balance;
     }
-    public Customer(String name, int balance) {
+    public Customer(String name, double balance) {
         this.id = lastId++;
         this.name = name;
         this.balance = balance;
@@ -37,7 +37,7 @@ public class Customer {
         return name;
     }
 
-    public int getBalance() {
+    public double getBalance() {
         return balance;
     }
 
@@ -49,7 +49,7 @@ public class Customer {
         this.name= name;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 

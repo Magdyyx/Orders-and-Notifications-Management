@@ -2,8 +2,10 @@ package com.example.FCAI.service;
 
 import com.example.FCAI.api.Repositories.ProductRepo;
 import com.example.FCAI.api.model.Product;
+import com.example.FCAI.api.model.RequestedProducts;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -22,8 +24,13 @@ public class ProductService {
     public List<Product> getProducts() {
         return productRepo.findAll();
     }
-    public List<Product> getProducts(List<Integer> serialNumbers) {
-        return productRepo.findAll(serialNumbers);
+    public List<Product> getProducts(List<RequestedProducts> requestedProducts) {
+        List<Product> products = new ArrayList<>();
+        for (RequestedProducts product : requestedProducts) {
+            products.add(productRepo.findById(product.getSerialNumber()));
+        }
+
+        return products;
     }
 
 
@@ -79,8 +86,8 @@ public class ProductService {
             return null;
         }
         Product updatedProduct = new Product(existingProduct);
-        existingProduct.setRemainingQuantity(existingProduct.getRemainingQuantity() - reductionQuantity);
-        return productRepo.update(existingProduct, updatedProduct);
+        updatedProduct.setRemainingQuantity(existingProduct.getRemainingQuantity() - reductionQuantity);
+        return updateProduct(existingProduct.getSerialNumber(), updatedProduct);
     }
 
 

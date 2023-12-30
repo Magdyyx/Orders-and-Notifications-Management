@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.FCAI.api.model.Customer.Customer;
 import com.example.FCAI.api.model.Product;
+import com.example.FCAI.api.model.RequestedProducts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,56 +26,56 @@ public class OrderService {
         this.productService = productService;
     }
 
-    public boolean createSimpleOrder(Order o) {
-        if (!checkOrder((SimpleOrder) o, o.getDeliveryDistrict(), o.getShippingFee()))
-            return false;
+//    public boolean createSimpleOrder(Order order) {
+//        if (!checkOrder((SimpleOrder) order, order.getDeliveryDistrict(), order.getShippingFee()))
+//            return false;
+//
+//        orderRepo.create(order);
+//        return true;
+//    }
+//
+//    public boolean createComplexOrder(Order o) {
+//        if(!checkOrder((CompositeOrder) o, o.getDeliveryDistrict(), o.getShippingFee()))
+//            return false;
+//
+//        // Create Order
+//        return true;
+//    }
 
-        orderRepo.create(o);
-        return true;
-    }
+//    private boolean checkOrder(Order o, String district, double shippingFee) {
+//        if (district == null || o.getDeliveryDistrict() != district)
+//            return false;
+//
+//        if (!checkOrderData(o))
+//            return false;
+//
+//        if (o instanceof SimpleOrder)
+//            return canCreateSimpleOrder((SimpleOrder) o);
+//
+//        return canCreateComplexOrder((CompositeOrder) o);
+//    }
 
-    public boolean createComplexOrder(Order o) {
-        if(!checkOrder((CompositeOrder) o, o.getDeliveryDistrict(), o.getShippingFee()))
-            return false;
+//    private boolean canCreateSimpleOrder(SimpleOrder o) {
+//        String district = o.getDeliveryDistrict();
+//        if (district == null || district.isBlank() || district.isEmpty())
+//            return false;
+//
+//        for (var product : o.getProducts().entrySet()) {
+//            if (productService.getProduct(product.getKey()) == null)
+//                return false;
+//        }
+//
+//        return true;
+//    }
 
-        // Create Order
-        return true;
-    }
-
-    private boolean checkOrder(Order o, String district, double shippingFee) {
-        if (district == null || o.getDeliveryDistrict() != district)
-            return false;
-
-        if (!checkOrderData(o))
-            return false;
-
-        if (o instanceof SimpleOrder)
-            return canCreateSimpleOrder((SimpleOrder) o);
-
-        return canCreateComplexOrder((CompositeOrder) o);
-    }
-
-    private boolean canCreateSimpleOrder(SimpleOrder o) {
-        String district = o.getDeliveryDistrict();
-        if (district == null || district.isBlank() || district.isEmpty())
-            return false;
-
-        for (var product : o.getProducts().entrySet()) {
-            if (productService.getProduct(product.getKey()) == null)
-                return false;
-        }
-
-        return true;
-    }
-
-    private boolean canCreateComplexOrder(CompositeOrder o) {
-        for (Order order : o.getOrders()) {
-            if (!checkOrder(order, o.getDeliveryDistrict(), o.getShippingFee()))
-                return false;
-        }
-
-        return true;
-    }
+//    private boolean canCreateComplexOrder(CompositeOrder o) {
+//        for (Order order : o.getOrders()) {
+//            if (!checkOrder(order, o.getDeliveryDistrict(), o.getShippingFee()))
+//                return false;
+//        }
+//
+//        return true;
+//    }
 
     private boolean checkOrderData(Order o) {
         if (o == null)
@@ -110,19 +111,26 @@ public class OrderService {
         return orderRepo.findAll();
     }
 
-    public SimpleOrder placeSimpleOrder(Customer loggedInCustomer, List<Integer> serialNumbers) {
-        List<Product> products = productService.getProducts(serialNumbers);
-        if (products == null || products.size() != serialNumbers.size())
+    public SimpleOrder placeSimpleOrder(Customer loggedInCustomer, List<RequestedProducts> requestedProducts) {
+        List<Product> products = productService.getProducts(requestedProducts);
+        if (products.size() != requestedProducts.size())
             return null;
+
         double totalPrice = 0;
-        for (Product product : products) {
-            totalPrice += product.getPrice();
+        for (int i = 0; i < products.size(); i++) {
+            if (requestedProducts.get(i).getQuantity() > products.get(i).getRemainingQuantity()) {
+                return null;
+            }
+            totalPrice += products.get(i).getPrice() * requestedProducts.get(i).getQuantity();
         }
         if (loggedInCustomer.getBalance() < totalPrice)
             return null;
 
-        loggedInCustomer.setBalance((int) (loggedInCustomer.getBalance() - totalPrice));
+        loggedInCustomer.setBalance((loggedInCustomer.getBalance() - totalPrice));
         customerService.updateCustomer(loggedInCustomer.getId(), loggedInCustomer);
+        for (int i = 0; i < requestedProducts.size(); i++){
+            productService.reduceQuantity(products.get(i).getSerialNumber(), requestedProducts.get(i).getQuantity());
+        }
         SimpleOrder order = new SimpleOrder(1, totalPrice, 30, "Giza", "ay7aga",loggedInCustomer.getId(), products);
         orderRepo.create(order);
         return order;

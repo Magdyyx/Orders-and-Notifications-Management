@@ -4,11 +4,11 @@ public class LoggedInCustomer extends Customer {
 
         int id;
         String name;
-        int balance;
+        double balance;
 
         static Customer LoggedInCustomer;
 
-        public LoggedInCustomer(int id, String name, int balance) {
+        public LoggedInCustomer(int id, String name, double balance) {
             this.id = id;
             this.name = name;
             this.balance = balance;
