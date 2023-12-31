@@ -155,28 +155,28 @@ public class CustomerController {
         }
     }
 
-    // @PostMapping("/ShipOrder")
-    // public ResponseEntity<?> ShipOrder(@RequestBody Order order){
-    // //To be wrapped inside CustomerService
-    // Customer loggedInCustomer = LoggedInCustomer.getLoggedInCustomer();
-    // if (loggedInCustomer == null) {
-    // Map<String, String> errorResponse = new HashMap<>();
-    // errorResponse.put("Error", "Please login first");
-    //
-    // return ResponseEntity.badRequest().body(errorResponse);
-    // }
-    // // changed SimpleOrder to abstract Order
-    // Order shippedOrder = (Order)orderService.ShipOrder(loggedInCustomer, order);
-    // if (shippedOrder != null) {
-    // System.out.println("shippedOrder is Not null");
-    // System.out.println("Printing the Response message");
-    // System.out.println(ResponseEntity.ok(shippedOrder));
-    // return ResponseEntity.ok(shippedOrder);
-    // } else {
-    // System.out.println("shippedOrder is null");
-    // Map<String, String> errorResponse = new HashMap<>();
-    // errorResponse.put("Error", "Cannot Ship Order");
-    // return ResponseEntity.badRequest().body(errorResponse);
-    // }
-    // }
+    @PostMapping("/CancelOrder")
+    public ResponseEntity<?> CancelOrder(@RequestParam int orderID) {
+        // To be wrapped inside CustomerService
+        Customer loggedInCustomer = LoggedInCustomer.getLoggedInCustomer();
+        if (loggedInCustomer == null) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("Error", "Please login first");
+
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+        // changed SimpleOrder to abstract Order
+        Order canceledOrder = (Order) orderService.CancelOrder(loggedInCustomer, orderID);
+        if (canceledOrder != null) {
+            System.out.println("canceledOrder is Not null");
+            System.out.println("Printing the Response message");
+            System.out.println(ResponseEntity.ok(canceledOrder));
+            return ResponseEntity.ok(canceledOrder);
+        } else {
+            System.out.println("canceledOrder is null");
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("Error", "Cannot Cancel Order");
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+    }
 }

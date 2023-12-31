@@ -176,4 +176,47 @@ public class OrderService {
 
         return orderTotalPrice + Order.getShippingFeeCost();
     }
+
+    public Object CancelOrder(Customer loggedInCustomer, int order){
+        Order orderToCancel = orderRepo.findById(order);
+        if(orderToCancel == null) {
+            return null;
+        }
+        if(orderToCancel.getCustomerID() != loggedInCustomer.getId()) {
+            return null;
+        }
+        if(orderToCancel instanceof SimpleOrder){
+            SimpleOrder simpleOrder = (SimpleOrder) orderToCancel;
+            Map<Integer,Integer> products = simpleOrder.getProducts();
+            for(var product : products.entrySet()){
+                productService.increaseQuantity(product.getKey(),product.getValue());
+            }
+            Customer customer = customerService.getCustomer(simpleOrder.getCustomerID());
+            customer.setBalance(customer.getBalance() + simpleOrder.getTotalPrice()+simpleOrder.getShippingFee());
+            customerService.updateCustomer(customer.getId(),customer);
+            orderRepo.delete(orderToCancel);
+            return simpleOrder;
+        }
+        else{
+            CompositeOrder compositeOrder = (CompositeOrder) orderToCancel;
+            List<Order> orders = compositeOrder.getOrders();
+            for(var order1 : orders){
+                SimpleOrder simpleOrder = (SimpleOrder) order1;
+                Map<Integer,Integer> products = simpleOrder.getProducts();
+                for(var product : products.entrySet()){
+                    productService.increaseQuantity(product.getKey(),product.getValue());
+                }
+                Customer customer = customerService.getCustomer(simpleOrder.getCustomerID());
+                customer.setBalance(customer.getBalance() + simpleOrder.getTotalPrice()+simpleOrder.getShippingFee());
+                customerService.updateCustomer(customer.getId(),customer);
+                orderRepo.delete(order1);
+            }
+            orderRepo.delete(orderToCancel);
+            return compositeOrder;
+        }
+
+
+
+        }
+
 }

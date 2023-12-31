@@ -21,6 +21,7 @@ public abstract class Order {
     protected String deliveryAddress;
     protected int customerID;
 
+
     public Order(double totalPrice, double shippingFee, String deliveryDistrict, String deliveryAddress,
             int customerID) {
         this.id = idCounter++;
@@ -84,4 +85,6 @@ public abstract class Order {
     }
 
     public abstract Map<Integer, Integer> getProducts();
+
+
 }

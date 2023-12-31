@@ -13,10 +13,10 @@ public class ProductRepo implements RepositoryService<Product> {
 
     public ProductRepo() {
         products = new ArrayList<>();
-//        Product product1 = new Product("mega", 1, "nestle", "ice cream", 20, 20);
-//        Product product2 = new Product("hohos", 2, "vendor2", "cake", 3, 60);
-//        Product product3 = new Product("big chips", 3, "egypt foods", "chipsy", 5, 40);
-//        products.addAll(List.of(product1, product2, product3));
+        Product product1 = new Product("mega", 1, "nestle", "ice cream", 20, 20);
+        Product product2 = new Product("hohos", 2, "vendor2", "cake", 3, 60);
+        Product product3 = new Product("big chips", 3, "egypt foods", "chipsy", 5, 40);
+        products.addAll(List.of(product1, product2, product3));
 
     }
 

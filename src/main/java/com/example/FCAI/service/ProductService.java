@@ -107,5 +107,13 @@ public class ProductService {
         return null;
     }
 
+    public void increaseQuantity(Integer key, Integer value) {
+        Product existingProduct = productRepo.findById(key);
+        if (existingProduct != null) {
+            Product updatedProduct = new Product(existingProduct);
+            updatedProduct.setRemainingQuantity(existingProduct.getRemainingQuantity() + value);
+            productRepo.update(existingProduct, updatedProduct);
+        }
+    }
 }
 
