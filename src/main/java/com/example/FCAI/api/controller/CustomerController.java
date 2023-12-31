@@ -6,7 +6,7 @@ import com.example.FCAI.api.model.Order.Order;
 import com.example.FCAI.api.model.UserAuthResponses.LoginResponse;
 import com.example.FCAI.api.model.UserAuthResponses.SignUpResponse;
 import com.example.FCAI.service.CustomerService;
-import com.example.FCAI.service.OrderService;
+import com.example.FCAI.service.Order.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -107,7 +107,6 @@ public class CustomerController {
     // Placing Orders
     @PostMapping("/placeSimpleOrder")
     public ResponseEntity<?> placeSimpleOrder(@RequestBody Map<Integer, Integer> products) {
-        // To be wrapped inside CustomerService
         Customer loggedInCustomer = LoggedInCustomer.getLoggedInCustomer();
         if (loggedInCustomer == null) {
             Map<String, String> errorResponse = new HashMap<>();
@@ -115,7 +114,6 @@ public class CustomerController {
 
             return ResponseEntity.badRequest().body(errorResponse);
         }
-        // changed SimpleOrder to abstract Order
         Order simpleOrder = (Order) orderService.placeSimpleOrder(loggedInCustomer, products);
         if (simpleOrder != null) {
             System.out.println("simpleOrder is Not null");
