@@ -1,5 +1,3 @@
-//package com.example.FCAI.service.notificationV2;
-//
 //import com.example.FCAI.api.Enums.OrderState;
 //import com.example.FCAI.api.Repositories.CustomerRepo;
 //import com.example.FCAI.api.Repositories.MessageRepo;

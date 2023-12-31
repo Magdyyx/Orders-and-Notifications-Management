@@ -2,7 +2,7 @@ package com.example.FCAI.api.controller;
 
 import com.example.FCAI.service.CustomerService;
 import com.example.FCAI.service.Order.OrderService;
-import com.example.FCAI.service.NotificationService;
+import com.example.FCAI.service.notificationService.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

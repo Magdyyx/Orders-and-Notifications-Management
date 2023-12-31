@@ -1,6 +1,4 @@
-package com.example.FCAI.service.notificationV2;
-
-import com.example.FCAI.api.model.Message;
+package com.example.FCAI.service.notificationService.MessageFacility;
 
 public class SMSMessage extends ReceiveMediumDecorator{
 //    @Override

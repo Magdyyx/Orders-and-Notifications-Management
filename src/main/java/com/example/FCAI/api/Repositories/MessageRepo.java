@@ -65,22 +65,6 @@ public class MessageRepo implements RepositoryService<Message> {
         return null;
     }
 
-//    public List<Message> findByID(int id) {
-//        List<Message> messageList = new ArrayList<>();
-//        for (Message message : messageList) {
-//            if (message.getCustomerId() == id) {
-//                messageList.add(message);
-//            }
-//        }
-//
-//        for (Message message : sentMessages) {
-//            if (message.getCustomerId() == id) {
-//                messageList.add(message);
-//            }
-//        }
-//
-//        return messageList;
-//    }
 
     @Override
     public Message findById(int id) {

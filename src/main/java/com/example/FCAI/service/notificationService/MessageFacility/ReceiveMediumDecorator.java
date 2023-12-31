@@ -1,4 +1,4 @@
-package com.example.FCAI.service.notificationV2;
+package com.example.FCAI.service.notificationService.MessageFacility;
 
 import com.example.FCAI.api.model.Message;
 
