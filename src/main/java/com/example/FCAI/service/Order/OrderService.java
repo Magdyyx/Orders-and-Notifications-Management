@@ -8,13 +8,13 @@ import java.util.concurrent.TimeUnit;
 import com.example.FCAI.api.model.Customer.Customer;
 import com.example.FCAI.api.model.Product;
 import com.example.FCAI.service.CustomerService;
-import com.example.FCAI.service.NotificationService;
 import com.example.FCAI.service.Order.CancelOrder.CancelOrderValidator;
 import com.example.FCAI.service.Order.CancelOrder.CompositeOrderCancellationStrategy;
 import com.example.FCAI.service.Order.CancelOrder.SimpleOrderCancellationStrategy;
 import com.example.FCAI.service.Order.OrderValidations.CompoundOrderValidation.*;
 import com.example.FCAI.service.Order.OrderValidations.SimpleOrderValidation.*;
 import com.example.FCAI.service.ProductService;
+import com.example.FCAI.service.notificationService.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
