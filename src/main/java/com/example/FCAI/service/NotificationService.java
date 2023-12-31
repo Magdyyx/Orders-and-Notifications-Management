@@ -46,6 +46,12 @@ public class NotificationService {
         Thread messageScheduler = new Thread(new MessageScheduler(message, this));
         messageScheduler.start();
 
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         return message;
 
     }
@@ -67,13 +73,13 @@ public class NotificationService {
         if (messageType.toLowerCase().equals("order")) {
             if (language.toLowerCase().equals("arabic")) {
                 messageFormatter = new ArabicOrderMessage();
-            } else if (messageType.toLowerCase().equals("english")) {
+            } else if (language.toLowerCase().equals("english")) {
                 messageFormatter = new EnglishOrderMessage();
             }
         } else if (messageType.toLowerCase().equals("shipment")) {
             if (language.toLowerCase().equals("arabic")) {
                 messageFormatter = new ArabicShipmentMessage();
-            } else if (messageType.toLowerCase().equals("english")) {
+            } else if (language.toLowerCase().equals("english")) {
                 messageFormatter = new EnglishShipmentMessage();
             }
         }
@@ -92,6 +98,45 @@ public class NotificationService {
     public int messageQueueSize(){
         Queue<Message> queue = messageRepo.getMessagesQueue();
         return queue.size();
+    }
+
+    public int getMostNotifiedCustomerID(){
+        Queue<Message> sentMessages = messageRepo.getSentMessages();
+        int mostNotifiedCustomerId = -1;
+        int maxCounter = -1;
+        for (Message currentMessage : sentMessages) {
+            int counter = 0;
+            for (Message message : sentMessages) {
+                if (currentMessage.getCustomerId() == message.getCustomerId()) {
+                    counter++;
+                }
+            }
+            if (counter > maxCounter) {
+                maxCounter = counter;
+                mostNotifiedCustomerId = currentMessage.getCustomerId();
+            }
+        }
+        return mostNotifiedCustomerId;
+    }
+
+    public String getMostSentNotificationTemplate(){
+        Queue<Message> sentMessages = messageRepo.getSentMessages();
+        String mostSentNotificationTemplate = null;
+        int maxCounter = -1;
+        for (Message currentMessage : sentMessages) {
+            int counter = 0;
+            for (Message message : sentMessages) {
+                if (currentMessage.getMessageType().equals(message.getMessageType())) {
+                    counter++;
+                }
+            }
+            if (counter > maxCounter) {
+                maxCounter = counter;
+                mostSentNotificationTemplate = currentMessage.getMessageType();
+            }
+        }
+
+        return mostSentNotificationTemplate;
     }
 }
 

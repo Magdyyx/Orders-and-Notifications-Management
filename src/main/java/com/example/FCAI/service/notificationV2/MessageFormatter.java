@@ -3,6 +3,7 @@ package com.example.FCAI.service.notificationV2;
 import com.example.FCAI.api.model.Message;
 import com.example.FCAI.api.model.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MessageFormatter {
@@ -16,7 +17,14 @@ public abstract class MessageFormatter {
 
     //public void printMessage(){}
 
-    public abstract Message formatMessage();
+    public Message formatMessage() {
+        stringFormat();
+        return message;
+    }
+
+    public abstract void stringFormat();
+    public abstract void setMessageType();
+    public abstract void setMessageLanguage();
 
     public String getProductsMessage(){
         StringBuilder productsMessage = new StringBuilder();
@@ -26,6 +34,7 @@ public abstract class MessageFormatter {
 
         return productsMessage.toString();
     }
+
 
     public String getOrderDistrict() {
         return orderDistrict;

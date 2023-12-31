@@ -8,11 +8,23 @@ public class EnglishShipmentMessage extends MessageFormatter{
     }
 
 
+
     @Override
-    public Message formatMessage() {
+    public void stringFormat() {
         message.setMessage("Dear " + customer + ", " + " your order of "
                 + getProductsMessage() + "with id: " + getOrderId() +" has been delivered to " + getOrderDistrict() + ", "
                 + getOrderLocation() + ".\nthanks for using our store :)");
-        return message;
     }
+
+    @Override
+    public void setMessageType() {
+        message.setMessageType("shipment");
+
+    }
+
+    @Override
+    public void setMessageLanguage() {
+        message.setMessageLanguage("english");
+    }
+
 }

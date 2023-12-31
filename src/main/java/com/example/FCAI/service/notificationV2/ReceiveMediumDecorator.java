@@ -5,8 +5,17 @@ import com.example.FCAI.api.model.Message;
 public abstract class ReceiveMediumDecorator extends MessageFormatter {
     MessageFormatter messageFormatter;
 
-    public abstract Message formatMessage();
+    public Message formatMessage(){
+        stringFormat();
+        setMessageMedium();
+        setMessageType();
+        setMessageLanguage();
+        return message;
+    }
 
+    public abstract void stringFormat();
+
+    public abstract void setMessageMedium();
 
 //    public Message getMessage() {
 //        return message;
