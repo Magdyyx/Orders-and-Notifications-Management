@@ -138,6 +138,10 @@ public class NotificationService {
 
         return mostSentNotificationTemplate;
     }
+
+    public Queue<Message> getAllNotifications() {
+        return messageRepo.getSentMessages();
+    }
 }
 
 

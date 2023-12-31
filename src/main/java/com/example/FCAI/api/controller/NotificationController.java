@@ -25,17 +25,21 @@ public class NotificationController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/{language}/{receiveMedium}/{messageType}")
-    public ResponseEntity<Message> getMessage(@PathVariable String language,
-                                              @PathVariable String receiveMedium,
-                                              @PathVariable String messageType,
-                                              @RequestBody Order order) {
-        Message message = notificationService.sendNotification(order, language, receiveMedium, messageType);
-        if (message == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(message);
+    @GetMapping
+    public ResponseEntity<?> getNotifications() {
+        return ResponseEntity.ok(notificationService.getAllNotifications());
     }
+//    @GetMapping("/{language}/{receiveMedium}/{messageType}")
+//    public ResponseEntity<Message> getMessage(@PathVariable String language,
+//                                              @PathVariable String receiveMedium,
+//                                              @PathVariable String messageType,
+//                                              @RequestBody Order order) {
+//        Message message = notificationService.sendNotification(order, language, receiveMedium, messageType);
+//        if (message == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+//        return ResponseEntity.ok(message);
+//    }
 
     @GetMapping("/mostNotifiedCustomer")
     public ResponseEntity<Integer> getMostNotifiedCustomer(){

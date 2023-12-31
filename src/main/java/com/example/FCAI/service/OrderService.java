@@ -24,12 +24,14 @@ public class OrderService {
     private OrderRepo orderRepo;
     private CustomerService customerService;
     private ProductService productService;
+    private NotificationService notificationService;
 
     @Autowired
-    public OrderService(OrderRepo orderRepo, CustomerService customerService, ProductService productService) {
+    public OrderService(OrderRepo orderRepo, CustomerService customerService, ProductService productService, NotificationService notificationService){
         this.orderRepo = orderRepo;
         this.customerService = customerService;
         this.productService = productService;
+        this.notificationService = notificationService;
     }
 
     public Order update(Order oldOrder, Order o) {
@@ -62,7 +64,8 @@ public class OrderService {
         executorService.schedule(() -> {
             shipOrder(order);
         }, 30, TimeUnit.SECONDS);
-
+        if(order != null)
+            notificationService.sendNotification(order, "English", "Email", "order");
         return order;
     }
 
@@ -185,6 +188,8 @@ public class OrderService {
         executorService.schedule(() -> {
             shipOrder(compositeOrder);
         }, 30, TimeUnit.SECONDS);
+        if(compositeOrder != null)
+            notificationService.sendNotification(compositeOrder, "English", "Email", "order");
         return compositeOrder;
     }
 
