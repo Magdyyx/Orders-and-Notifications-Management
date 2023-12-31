@@ -1,7 +1,6 @@
-package com.example.FCAI.service.notificationV2;
+package com.example.FCAI.service.notificationService;
 
 import com.example.FCAI.api.model.Message;
-import com.example.FCAI.service.NotificationService;
 
 import java.util.Random;
 

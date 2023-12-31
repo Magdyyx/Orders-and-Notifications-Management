@@ -1,9 +1,8 @@
-package com.example.FCAI.service.notificationV2;
+package com.example.FCAI.service.notificationService.MessageFacility;
 
 import com.example.FCAI.api.model.Message;
 import com.example.FCAI.api.model.Product;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MessageFormatter {

@@ -1,10 +1,16 @@
-package com.example.FCAI.service;
+package com.example.FCAI.service.notificationService;
 
 import com.example.FCAI.api.Repositories.MessageRepo;
 import com.example.FCAI.api.model.Message;
 import com.example.FCAI.api.model.Order.Order;
 import com.example.FCAI.api.model.Product;
-import com.example.FCAI.service.notificationV2.*;
+import com.example.FCAI.service.CustomerService;
+import com.example.FCAI.service.ProductService;
+import com.example.FCAI.service.notificationService.*;
+import com.example.FCAI.service.notificationService.MessageFacility.MessageFormatter;
+import com.example.FCAI.service.notificationService.MessageFacility.ReceiveMediumDecorator;
+import com.example.FCAI.service.notificationService.factories.MessageFormatterFactory;
+import com.example.FCAI.service.notificationService.factories.ReceiveMediumDecoratorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,22 +33,35 @@ public class NotificationService {
     }
 
     public Message sendNotification(Order order, String language, String receiveMedium, String messageType) {
-        ReceiveMediumDecorator receiveMediumDecorator = receiveMediumFactory(receiveMedium);
-        MessageFormatter messageFormatter = messageFormatterFactory(language, messageType);
+        ReceiveMediumDecoratorFactory receiveMediumDecoratorFactory = new ReceiveMediumDecoratorFactory();
+        ReceiveMediumDecorator receiveMediumDecorator = receiveMediumDecoratorFactory.createReceiveMedium(receiveMedium);
+
+        MessageFormatterFactory messageFormatterFactory = new MessageFormatterFactory();
+        MessageFormatter messageFormatter = messageFormatterFactory.createMessageFormatter(language, messageType);
+
+
+        Message message = new Message(order.getCustomerID(), 1);
+        receiveMediumDecorator.setMessage(message);
+
         Map<Integer, Integer> productsMap = order.getProducts();
         List<Product> productList = productService.getProducts(productsMap);
-        Message message = new Message(order.getCustomerID(), 1);
+        String customerName = customerService.getCustomer(order.getCustomerID()).getName();
+        String orderDistrict = order.getDeliveryDistrict();
+        String orderLocation = order.getDeliveryAddress();
+        String orderID = String.valueOf(order.getId());
 
-        receiveMediumDecorator.setMessage(message);
-        messageFormatter.setProductList(productList);
-        messageFormatter.setCustomer(customerService.getCustomer(order.getCustomerID()).getName());
-        messageFormatter.setOrderDistrict(order.getDeliveryDistrict());
-        messageFormatter.setOrderLocation(order.getDeliveryAddress());
-        messageFormatter.setMessage(message);
-        messageFormatter.setOrderId(String.valueOf(order.getId()));
+
+
+        setFormatterData(messageFormatter, message, productList, customerName, orderDistrict, orderLocation,
+                orderID);
+
         receiveMediumDecorator.setMessage(messageFormatter);
+
+
         receiveMediumDecorator.formatMessage();
 
+
+        // simulating time between ordering and shipment
         Thread messageScheduler = new Thread(new MessageScheduler(message, this));
         messageScheduler.start();
 
@@ -53,43 +72,24 @@ public class NotificationService {
         }
 
         return message;
+    }
+    private void setFormatterData(MessageFormatter messageFormatter, Message message,
+                                  List<Product> productList, String customerName,
+                                  String orderDistrict, String orderLocation, String orderID) {
+        messageFormatter.setMessage(message);
+        messageFormatter.setProductList(productList);
+        messageFormatter.setCustomer(customerName);
+        messageFormatter.setOrderDistrict(orderDistrict);
+        messageFormatter.setOrderLocation(orderLocation);
+        messageFormatter.setOrderId(orderID);
 
     }
 
-
-
-    private ReceiveMediumDecorator receiveMediumFactory(String receiveMedium) {
-        ReceiveMediumDecorator receiveMediumDecorator = null;
-        if (receiveMedium.toLowerCase().equals("sms")){
-            receiveMediumDecorator = new SMSMessage();
-        } else if (receiveMedium.toLowerCase().equals("email")) {
-            receiveMediumDecorator = new EmailMessage();
-        }
-        return receiveMediumDecorator;
-    }
-
-    private MessageFormatter messageFormatterFactory(String language, String messageType){
-        MessageFormatter messageFormatter = null;
-        if (messageType.toLowerCase().equals("order")) {
-            if (language.toLowerCase().equals("arabic")) {
-                messageFormatter = new ArabicOrderMessage();
-            } else if (language.toLowerCase().equals("english")) {
-                messageFormatter = new EnglishOrderMessage();
-            }
-        } else if (messageType.toLowerCase().equals("shipment")) {
-            if (language.toLowerCase().equals("arabic")) {
-                messageFormatter = new ArabicShipmentMessage();
-            } else if (language.toLowerCase().equals("english")) {
-                messageFormatter = new EnglishShipmentMessage();
-            }
-        }
-
-        return messageFormatter;
-    }
 
     public Message addToMessageQueue(Message message) {
         return messageRepo.create(message);
     }
+
     public Message sendMessage(Message message) {
         messageRepo.delete(message);
         return messageRepo.setSent(message);

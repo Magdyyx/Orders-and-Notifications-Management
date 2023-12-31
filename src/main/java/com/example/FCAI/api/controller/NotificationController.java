@@ -4,7 +4,7 @@ import com.example.FCAI.api.model.Message;
 import com.example.FCAI.api.model.Order.Order;
 import com.example.FCAI.service.CustomerService;
 import com.example.FCAI.service.OrderService;
-import com.example.FCAI.service.NotificationService;
+import com.example.FCAI.service.notificationService.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
