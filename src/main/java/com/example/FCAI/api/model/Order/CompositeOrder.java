@@ -4,13 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CompositeOrder extends Order {
+import com.example.FCAI.api.Enums.OrderState;
 
+public class CompositeOrder extends Order {
     List<Order> orders;
 
-    public CompositeOrder(double totalPrice, double shippingFee, String deliveryDistrict,
-            String deliveryAddress, int customerID, List<Order> orders) {
-        super(totalPrice, shippingFee, deliveryDistrict, deliveryAddress, customerID);
+    public CompositeOrder(double totalPrice, double shippingFee, String deliveryDistrict, String deliveryAddress,
+            int customerID, boolean canCancelOrder, OrderState state, List<Order> orders) {
+        super(totalPrice, shippingFee, deliveryDistrict, deliveryAddress, customerID, canCancelOrder, state);
         this.orders = orders;
     }
 

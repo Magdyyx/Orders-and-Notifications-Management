@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import com.example.FCAI.api.model.Customer.Customer;
 import com.example.FCAI.api.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.FCAI.api.Enums.OrderState;
 import com.example.FCAI.api.Repositories.OrderRepo;
 import com.example.FCAI.api.model.Order.CompositeOrder;
 import com.example.FCAI.api.model.Order.Order;
@@ -50,10 +54,20 @@ public class OrderService {
     }
 
     public SimpleOrder placeSimpleOrder(Customer loggedInCustomer, Map<Integer, Integer> requestedProducts) {
-        return placeSimpleOrder(loggedInCustomer, requestedProducts, Order.getShippingFeeCost());
+        SimpleOrder order = placeSimpleOrder(loggedInCustomer, requestedProducts, Order.getShippingFeeCost());
+
+        // Invoke a method that changes the order state
+        // To prevent cancelling order after 30 seconds
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService.schedule(() -> {
+            shipOrder(order);
+        }, 30, TimeUnit.SECONDS);
+
+        return order;
     }
 
-    public SimpleOrder placeSimpleOrder(Customer customer, Map<Integer, Integer> requestedProducts, double shippingFee) {
+    private SimpleOrder placeSimpleOrder(Customer customer, Map<Integer, Integer> requestedProducts,
+            double shippingFee) {
         // Check District and Address
         if (customer.getDistrict() == null || customer.getAddress() == null)
             return null;
@@ -86,7 +100,7 @@ public class OrderService {
             i++;
         }
         SimpleOrder order = new SimpleOrder(totalPrice, shippingFee, customer.getDistrict(), customer.getAddress(),
-                customer.getId(), requestedProducts);
+                customer.getId(), true, OrderState.Placed, requestedProducts);
         orderRepo.create(order);
 
         return order;
@@ -131,7 +145,7 @@ public class OrderService {
                 return null;
             }
         }
-        //Check for same district for Customers
+        // Check for same district for Customers
         for (var entry : customersAndProducts.entrySet()) {
             int customerId = entry.getKey();
             // Step 1: Check District for each customer and their corresponding order
@@ -147,7 +161,12 @@ public class OrderService {
             int customerId = entry.getKey();
             Map<Integer, Integer> productsMap = entry.getValue();
             Customer customer = customerService.getCustomer(customerId);
-            confirmedOrders.add(placeSimpleOrder(customer, productsMap,Order.getShippingFeeCost() / customersAndProducts.size()));
+
+            SimpleOrder simpleOrder = placeSimpleOrder(customer, productsMap,
+                    Order.getShippingFeeCost() / customersAndProducts.size());
+            simpleOrder.setCanCancelOrder(false);
+
+            confirmedOrders.add(simpleOrder);
         }
 
         for (Order order : confirmedOrders) {
@@ -157,9 +176,15 @@ public class OrderService {
         // Create Composoite Order
         CompositeOrder compositeOrder = new CompositeOrder(totalPrice, Order.getShippingFeeCost(),
                 loggedInCustomer.getDistrict(), loggedInCustomer.getAddress(),
-                loggedInCustomer.getId(), confirmedOrders);
+                loggedInCustomer.getId(), true, OrderState.Placed, confirmedOrders);
         orderRepo.create(compositeOrder);
 
+        // Invoke a method that changes the order state
+        // To prevent cancelling order after 30 seconds
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService.schedule(() -> {
+            shipOrder(compositeOrder);
+        }, 30, TimeUnit.SECONDS);
         return compositeOrder;
     }
 
@@ -177,46 +202,52 @@ public class OrderService {
         return orderTotalPrice + Order.getShippingFeeCost();
     }
 
-    public Object CancelOrder(Customer loggedInCustomer, int order){
+    public Object CancelOrder(Customer loggedInCustomer, int order) {
         Order orderToCancel = orderRepo.findById(order);
-        if(orderToCancel == null) {
+        if (orderToCancel == null) {
             return null;
         }
-        if(orderToCancel.getCustomerID() != loggedInCustomer.getId()) {
+
+        if (!orderToCancel.CanCancelOrder() || !(orderToCancel.getState() == OrderState.Placed)) {
             return null;
         }
-        if(orderToCancel instanceof SimpleOrder){
+
+        if (orderToCancel.getCustomerID() != loggedInCustomer.getId()) {
+            return null;
+        }
+
+        if (orderToCancel instanceof SimpleOrder) {
             SimpleOrder simpleOrder = (SimpleOrder) orderToCancel;
-            Map<Integer,Integer> products = simpleOrder.getProducts();
-            for(var product : products.entrySet()){
-                productService.increaseQuantity(product.getKey(),product.getValue());
+            Map<Integer, Integer> products = simpleOrder.getProducts();
+            for (var product : products.entrySet()) {
+                productService.increaseQuantity(product.getKey(), product.getValue());
             }
             Customer customer = customerService.getCustomer(simpleOrder.getCustomerID());
-            customer.setBalance(customer.getBalance() + simpleOrder.getTotalPrice()+simpleOrder.getShippingFee());
-            customerService.updateCustomer(customer.getId(),customer);
+            customer.setBalance(customer.getBalance() + simpleOrder.getTotalPrice() + simpleOrder.getShippingFee());
+            customerService.updateCustomer(customer.getId(), customer);
             orderRepo.delete(orderToCancel);
             return simpleOrder;
-        }
-        else{
+        } else {
             CompositeOrder compositeOrder = (CompositeOrder) orderToCancel;
             List<Order> orders = compositeOrder.getOrders();
-            for(var order1 : orders){
+            for (var order1 : orders) {
                 SimpleOrder simpleOrder = (SimpleOrder) order1;
-                Map<Integer,Integer> products = simpleOrder.getProducts();
-                for(var product : products.entrySet()){
-                    productService.increaseQuantity(product.getKey(),product.getValue());
+                Map<Integer, Integer> products = simpleOrder.getProducts();
+                for (var product : products.entrySet()) {
+                    productService.increaseQuantity(product.getKey(), product.getValue());
                 }
                 Customer customer = customerService.getCustomer(simpleOrder.getCustomerID());
-                customer.setBalance(customer.getBalance() + simpleOrder.getTotalPrice()+simpleOrder.getShippingFee());
-                customerService.updateCustomer(customer.getId(),customer);
+                customer.setBalance(customer.getBalance() + simpleOrder.getTotalPrice() + simpleOrder.getShippingFee());
+                customerService.updateCustomer(customer.getId(), customer);
                 orderRepo.delete(order1);
             }
             orderRepo.delete(orderToCancel);
             return compositeOrder;
         }
+    }
 
-
-
-        }
-
+    private void shipOrder(Order order) {
+        order.setState(OrderState.Shipping);
+        order.setCanCancelOrder(false);
+    }
 }
