@@ -10,7 +10,7 @@ public class ArabicOrderMessage extends MessageFormatter {
     @Override
     public Message formatMessage() {
         message.setMessage( "عزيزنا العميل " + customer + ", " + "لقد تم تأكيد شرائك ل " + getProductsMessage()
-                + "تحت رقم" + getOrderId() + "\nشكرا لاستخدامك متجرنا :)");
+                + " تحت رقم " + getOrderId() + "\nشكرا لاستخدامك متجرنا :)");
         return message;
     }
 }

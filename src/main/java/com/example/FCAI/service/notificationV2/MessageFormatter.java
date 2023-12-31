@@ -16,10 +16,6 @@ public abstract class MessageFormatter {
 
     //public void printMessage(){}
 
-    public MessageFormatter() {
-        message = new Message();
-    }
-
     public abstract Message formatMessage();
 
     public String getProductsMessage(){

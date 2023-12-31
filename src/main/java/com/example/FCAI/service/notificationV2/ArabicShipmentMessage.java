@@ -10,8 +10,8 @@ public class ArabicShipmentMessage extends MessageFormatter{
 
     @Override
     public Message formatMessage() {
-        message.setMessage( "عزيزنا العميل " + customer + ", " + "لقد وصل طلبك ل" + getProductsMessage()
-                + "تحت رقم" + getOrderId() + "لعنوان" + getOrderDistrict() + ", " + getOrderLocation()
+        message.setMessage( "عزيزنا العميل " + customer + ", " + " لقد وصل طلبك ل " + getProductsMessage()
+                + " تحت رقم " + getOrderId() + " لعنوان " + getOrderDistrict() + ", " + getOrderLocation()
                 + "\nشكرا لاستخدامك متجرنا :)");
         return message;
     }

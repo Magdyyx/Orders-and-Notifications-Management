@@ -4,14 +4,15 @@ import com.example.FCAI.api.model.Message;
 import com.example.FCAI.service.RepositoryService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
 @Service
 public class MessageRepo implements RepositoryService<Message> {
-    Queue<Message> messagesQueue;
-    Queue<Message> sentMessages;
+    private Queue<Message> messagesQueue;
+    private Queue<Message> sentMessages;
 
     public MessageRepo() {
         messagesQueue = new LinkedList<>();
@@ -25,7 +26,6 @@ public class MessageRepo implements RepositoryService<Message> {
     }
     public Message setSent(Message message) {
         Message message1 = new Message(message);
-        messagesQueue.remove(message);
         sentMessages.add(message);
         return message1;
     }
@@ -56,9 +56,31 @@ public class MessageRepo implements RepositoryService<Message> {
 
     @Override
     public Message delete(Message message) {
-        messagesQueue.remove(message);
-        return message;
+        for (Message currentMessage: messagesQueue) {
+            if (currentMessage.getMessageId() == message.getMessageId()) {
+                messagesQueue.remove(currentMessage);
+                return message;
+            }
+        }
+        return null;
     }
+
+//    public List<Message> findByID(int id) {
+//        List<Message> messageList = new ArrayList<>();
+//        for (Message message : messageList) {
+//            if (message.getCustomerId() == id) {
+//                messageList.add(message);
+//            }
+//        }
+//
+//        for (Message message : sentMessages) {
+//            if (message.getCustomerId() == id) {
+//                messageList.add(message);
+//            }
+//        }
+//
+//        return messageList;
+//    }
 
     @Override
     public Message findById(int id) {
@@ -67,6 +89,14 @@ public class MessageRepo implements RepositoryService<Message> {
 
     @Override
     public List<Message> findAll() {
-        return null;
+        List<Message> messageList = new ArrayList<>();
+        for (Message message : messagesQueue) {
+            messageList.add(message);
+        }
+
+        for (Message message : sentMessages) {
+            messageList.add(message);
+        }
+        return messageList;
     }
 }
