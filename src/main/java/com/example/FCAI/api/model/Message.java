@@ -2,6 +2,9 @@ package com.example.FCAI.api.model;
 
 public class Message {
     String message;
+    String messageLanguage;
+    String messageType;
+    String messageMedium;
     int messageId;
     int customerId;
 
@@ -10,6 +13,30 @@ public class Message {
         this.customerId = customerId;
     }
 
+
+    public String getMessageLanguage() {
+        return messageLanguage;
+    }
+
+    public void setMessageLanguage(String messageLanguage) {
+        this.messageLanguage = messageLanguage;
+    }
+
+    public String getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(String messageType) {
+        this.messageType = messageType;
+    }
+
+    public String getMessageMedium() {
+        return messageMedium;
+    }
+
+    public void setMessageMedium(String messageMedium) {
+        this.messageMedium = messageMedium;
+    }
 
     public int getCustomerId() {
         return customerId;

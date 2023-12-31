@@ -78,8 +78,14 @@ public class TestDrive {
 
 
 
+
         NotificationService notificationService = new NotificationService(messageRepo, customerService, productService);
         System.out.println("Testing NotificationService");
-        System.out.println(notificationService.sendNotification(order1, "arabic", "email", "shipment").getMessage());
+        System.out.println(notificationService.sendNotification(order, "english", "email", "shipment").getMessage());
+
+        System.out.println(notificationService.getMostNotifiedCustomerID());
+        System.out.println(notificationService.getMostSentNotificationTemplate());
+
+
     }
 }

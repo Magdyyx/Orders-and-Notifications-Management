@@ -37,4 +37,24 @@ public class NotificationController {
         return ResponseEntity.ok(message);
     }
 
+    @GetMapping("/mostNotifiedCustomer")
+    public ResponseEntity<Integer> getMostNotifiedCustomer(){
+        int customerId = notificationService.getMostNotifiedCustomerID();
+
+        if (customerId == -1) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(customerId);
+    }
+
+    @GetMapping("/mostSentNotificationTemplate")
+    public ResponseEntity<String> getMostSentNotificationTemplate(){
+        String mostSentNotificationTemplate = notificationService.getMostSentNotificationTemplate();
+
+        if (mostSentNotificationTemplate == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(mostSentNotificationTemplate);
+    }
+
 }

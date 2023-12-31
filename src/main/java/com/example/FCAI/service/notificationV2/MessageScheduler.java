@@ -22,10 +22,10 @@ public class MessageScheduler implements Runnable{
             try {
                 System.out.println("inside scheduler");
 
-                Thread.sleep(random.nextInt(1000) + 100);
+                Thread.sleep(random.nextInt(1) + 1);
 
                 notificationService.sendMessage(message);
-                System.out.println("message sent");
+
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
